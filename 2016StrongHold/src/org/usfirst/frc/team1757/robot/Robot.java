@@ -39,6 +39,10 @@ public class Robot extends IterativeRobot {
     int session;
     Image frame;
     
+    final String defaultAuto = "Default";
+    final String customAuto = "My Auto";
+    String autoSelected;
+    
     double Kp = 0.04;
     double Ki = 0.00;
     double Kd = 0.00;
@@ -87,13 +91,24 @@ public class Robot extends IterativeRobot {
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
     public void autonomousInit() {
+    	autoSelected = (String) chooser.getSelected();
+//		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
+		System.out.println("Auto selected: " + autoSelected);
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-    	
+    	switch(autoSelected) {
+    	case customAuto:
+        //Put custom auto code here   
+            break;
+    	case defaultAuto:
+    	default:
+    	//Put default auto code here
+            break;
+    	}
     }
 
     /**
