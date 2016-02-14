@@ -92,7 +92,7 @@ public class Robot extends IterativeRobot {
 	 */
     public void autonomousInit() {
     	autoSelected = (String) chooser.getSelected();
-//		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
+    	autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
     }
 
