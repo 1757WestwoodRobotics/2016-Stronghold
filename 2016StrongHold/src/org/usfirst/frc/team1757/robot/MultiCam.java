@@ -1,3 +1,7 @@
+/**
+ * Huge thanks to kmodos on Chief Delphi for the camera switching code!
+ */
+
 package org.usfirst.frc.team1757.robot;
 
 import java.util.ArrayList;
