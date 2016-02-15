@@ -1,8 +1,13 @@
 package org.usfirst.frc.team1757.robot;
 
+import java.util.ArrayList;
+
+import org.usfirst.frc.team1757.robot.*;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.USBCamera;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -10,16 +15,10 @@ import edu.wpi.first.wpilibj.ADXL362;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 
-import edu.wpi.first.wpilibj.CameraServer;
-import com.ni.vision.NIVision;
-import com.ni.vision.NIVision.DrawMode;
-import com.ni.vision.NIVision.Image;
-import com.ni.vision.NIVision.ShapeMode;
-
-import org.usfirst.frc.team1757.robot.*;
-
+@SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
 	
     Command autonomousCommand;
@@ -31,35 +30,30 @@ public class Robot extends IterativeRobot {
     TeamDrive leftTeam, rightTeam;
     
     Joystick gamepad;
+    Joystick attack3;
     ADXL362 accel;
     ADXRS450_Gyro gyro;
     
-    CameraServer camera;
-   
-    int session;
-    Image frame;
+    MultiCam cameraServer;
+    USBCamera cam1, cam2;
     
+    double setpoint = 0;
+    double initialTurn = 10;
+        
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
     
-    double Kp = 0.04;
-    double Ki = 0.00;
-    double Kd = 0.00;
-    double Kf = 0;
-    double sensitivity = .4;
-    double setpoint = 0;
-    double initialTurn = 10;
-    double turnConstant = 0.8;
-    
-    boolean simpleDrive;
+    boolean simpleDrive = false;
+    boolean _gamepad = true;
 
     public void robotInit() {
-        gamepad = new Joystick(0);
-		backLeftMotor = new CANTalon(1);
-		backRightMotor = new CANTalon(2);
-		frontLeftMotor = new CANTalon(3);
-		frontRightMotor = new CANTalon(4);
+        gamepad = new Joystick(Constants.Gamepad_LogitechDual.PORT);
+        attack3 = new Joystick(1);
+		backLeftMotor = new CANTalon(Constants.CAN_.MOTORBACKLEFT);
+		backRightMotor = new CANTalon(Constants.CAN_.MOTORBACKRIGHT);
+		frontLeftMotor = new CANTalon(Constants.CAN_.MOTORFRONTLEFT);
+		frontRightMotor = new CANTalon(Constants.CAN_.MOTORFRONTRIGHT);
 		
 		CANTalon leftArray[] = {frontLeftMotor, backLeftMotor};
 		CANTalon rightArray[] = {frontRightMotor, backRightMotor};
@@ -73,14 +67,20 @@ public class Robot extends IterativeRobot {
 		gyro = new ADXRS450_Gyro();
 		accel = new ADXL362(Accelerometer.Range.k8G);
 		
-		pidLeft = new PIDController(0, Kp, Ki, Kd, Kf, gyro, leftTeam);
-		pidRight = new PIDController(0, Kp, Ki, Kd, Kf, gyro, rightTeam);
+		pidLeft = new PIDController(0, Constants.PID_.Kp, Constants.PID_.Ki, Constants.PID_.Kd, Constants.PID_.Kf, gyro, leftTeam);
+		pidRight = new PIDController(0, Constants.PID_.Kp, Constants.PID_.Ki, Constants.PID_.Kd, Constants.PID_.Kf, gyro, rightTeam);
 		
-		gyro.reset();
+		cam1 = new USBCamera("cam0");
+		cam2 = new USBCamera("cam1");
+		ArrayList<USBCamera> cams = new ArrayList<USBCamera>();
+		cams.add(cam1); cams.add(cam2);
 		
-		camera = CameraServer.getInstance();
-        camera.setQuality(50);
-        camera.startAutomaticCapture("cam0");
+		ArrayList<String> camnames = new ArrayList<String>();
+		camnames.add("cam0"); camnames.add("cam1");
+		cameraServer = new MultiCam(cams, camnames, Constants.Camera.CURRCAM, Constants.Camera.MAX_FPS, Constants.Camera.QUALITY, Constants.Camera.SLEEP_TIME);
+		
+		
+		cameraServer.camInit();
     }
     
 	/**
@@ -115,7 +115,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	while (isOperatorControl() && isEnabled()){
+    	while (isOperatorControl() && isEnabled()){    		
         	SmartDashboard.putData("Gyro", gyro);
     		SmartDashboard.putData("Accelerometer", accel);
     		SmartDashboard.putData("pidLeft", pidLeft);
@@ -124,45 +124,70 @@ public class Robot extends IterativeRobot {
     		SmartDashboard.putNumber("rightTeam", rightTeam.get());
     		SmartDashboard.putNumber("leftTeam", leftTeam.get());
     		
-    		SmartDashboard.putNumber("Right Joystick", gamepad.getRawAxis(3)*sensitivity );
-    		SmartDashboard.putNumber("Left Joystick", gamepad.getY()*sensitivity);
+    		SmartDashboard.putNumber("Right Joystick", gamepad.getRawAxis(3)*Constants.Gamepad_LogitechDual.SENSITIVITY);
+    		SmartDashboard.putNumber("Left Joystick", gamepad.getY()*Constants.Gamepad_LogitechDual.SENSITIVITY);
+    		
+    		SmartDashboard.putNumber("Attack3 Tilt Forward", attack3.getRawAxis(1)*Constants.Logitech_ATK3.SENSITIVITY);
+    		SmartDashboard.putNumber("Attack3 Tilt Left", attack3.getRawAxis(0)*-Constants.Logitech_ATK3.SENSITIVITY);
     		
     		SmartDashboard.putNumber("Angle", gyro.getAngle());	
     		
     		pidLeft.setInverted(true);
     		pidRight.setInverted(false);
     		
-    		pidLeft.setDrive(gamepad.getY()*sensitivity);
-    		pidRight.setDrive(gamepad.getY()*sensitivity);
+    		cameraServer.runCam();
     		
-    		if (gamepad.getRawAxis(3) > .1) {
-    			setpoint += gamepad.getRawAxis(3)*turnConstant;
-    			pidLeft.setSetpoint(setpoint);
-    			pidRight.setSetpoint(setpoint);
+    		if (_gamepad) {
+    			pidLeft.setDrive(gamepad.getY()*Constants.Gamepad_LogitechDual.SENSITIVITY);
+        		pidRight.setDrive(gamepad.getY()*Constants.Gamepad_LogitechDual.SENSITIVITY);
+        		
+        		if (gamepad.getRawAxis(3) > .1) {
+        			setpoint += gamepad.getRawAxis(3)*Constants.PID_.turnConstant;
+        			pidLeft.setSetpoint(setpoint);
+        			pidRight.setSetpoint(setpoint);
+        		}
+        		
+        		if (gamepad.getRawAxis(3) < -.1) {
+        			setpoint += gamepad.getRawAxis(3)*Constants.PID_.turnConstant;
+        			pidLeft.setSetpoint(setpoint);
+        			pidRight.setSetpoint(setpoint);
+        		}
+    		}
+    		else {
+    			pidLeft.setDrive(attack3.getRawAxis(Constants.Logitech_ATK3.AXIS_Y)*Constants.Logitech_ATK3.SENSITIVITY);
+        		pidRight.setDrive(attack3.getRawAxis(Constants.Logitech_ATK3.AXIS_Y)*Constants.Logitech_ATK3.SENSITIVITY);
+        		
+        		if (attack3.getRawAxis(Constants.Logitech_ATK3.AXIS_X) > .1) {
+        			setpoint += attack3.getRawAxis(Constants.Logitech_ATK3.AXIS_X)*Constants.PID_.turnConstant;
+        			pidLeft.setSetpoint(setpoint);
+        			pidRight.setSetpoint(setpoint);
+        		}
+        		if (attack3.getRawAxis(Constants.Logitech_ATK3.AXIS_X) < -.1) {
+        			setpoint += attack3.getRawAxis(Constants.Logitech_ATK3.AXIS_X)*Constants.PID_.turnConstant;
+        			pidLeft.setSetpoint(setpoint);
+        			pidRight.setSetpoint(setpoint);
+        		}
     		}
     		
-    		if (gamepad.getRawAxis(3) < -.1) {
-    			setpoint += gamepad.getRawAxis(3)*turnConstant;
-    			pidLeft.setSetpoint(setpoint);
-    			pidRight.setSetpoint(setpoint);
-    		}
     		
-    		if (gamepad.getRawButton(1)) {
+    		if (gamepad.getRawButton(Constants.Gamepad_LogitechDual.BUTTON_X)) {
     			gyro.reset();
     		}
-    		if (gamepad.getRawButton(3)) {
+    		if (gamepad.getRawButton(Constants.Gamepad_LogitechDual.BUTTON_B)) {
     			pidRight.disable();
     			pidLeft.disable();
     			simpleDrive = true;
     		}
-    		if (gamepad.getRawButton(2)){
-    			frontLeftMotor.enableBrakeMode(true);
+    		if (gamepad.getRawButton(Constants.Gamepad_LogitechDual.BUTTON_Y)) {
+    			cameraServer.switchCamera();
     		}
     		if (simpleDrive){
-    			leftTeam.set(gamepad.getRawAxis(3)*-sensitivity);
-        		rightTeam.set(gamepad.getY()*sensitivity);
+    			leftTeam.set(gamepad.getRawAxis(3)*-Constants.Gamepad_LogitechDual.SENSITIVITY);
+        		rightTeam.set(gamepad.getY()*Constants.Gamepad_LogitechDual.SENSITIVITY);
     		}
-    	
+    		if (gamepad.getRawButton(Constants.Gamepad_LogitechDual.BUTTON_A)){
+    			_gamepad = false;
+    		}
     		
     	}
     }
