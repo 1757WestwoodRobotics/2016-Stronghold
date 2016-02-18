@@ -49,6 +49,8 @@ public class MultiCam {
 	 */
 	private long SLEEP_TIME;
 	
+	public boolean isEnabled = false;
+	
 	public MultiCam(ArrayList<USBCamera> CAMS, ArrayList<String> CAMNAMES, int CURRCAM, int _MAX_FPS, int _QUALITY, int _SLEEP_TIME) {
 		cams = CAMS;
 		camNames = CAMNAMES;
@@ -87,6 +89,7 @@ public class MultiCam {
 		cam = cams.get(currCam);
 		cam.openCamera();
 		cam.startCapture();
+		setEnabled(true);
 	}
 	
 	public void runCam() {
@@ -104,6 +107,13 @@ public class MultiCam {
 		cams.add(temp);
 		temp = null;
 		camNames.add(camName);
+	}
+	
+	/**
+	 * Sets enabled status
+	 */
+	public void setEnabled(boolean enabled) {
+		isEnabled = enabled;
 	}
 	
 	

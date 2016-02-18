@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.usfirst.frc.team1757.robot.*;
 
+import com.ni.vision.VisionException;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -135,7 +137,15 @@ public class Robot extends IterativeRobot {
     		pidLeft.setInverted(true);
     		pidRight.setInverted(false);
     		
-    		cameraServer.runCam();
+    		if (cameraServer.isEnabled) {
+	    		try {
+	    			cameraServer.runCam();
+	    		}
+	    		catch (VisionException e) {
+	    			cameraServer.setEnabled(false);
+	    			throw e;
+	    		}
+    		}
     		
     		if (_gamepad) {
     			pidLeft.setDrive(gamepad.getY()*Constants.Gamepad_LogitechDual.SENSITIVITY);
