@@ -117,4 +117,8 @@ public class TeamDrive implements SpeedController {
 		else
 			return false;
 	}
+	
+	public void stopMotor() {
+	}
+	
 }
