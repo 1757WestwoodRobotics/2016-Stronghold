@@ -17,16 +17,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
+    
     String autoSelected;
     SendableChooser chooser;
+    
     CANTalon talon0, talon1, talon2, talon3, talon4, talon5, talon6, talon7;
-	Joystick gamepad;
-	CANTalon[] talons = new CANTalon[8]; 
-	int index = 0;
+    CANTalon[] talons = new CANTalon[8];
+   
 	RobotDrive drive;
+	
+	int index = 0;
 	double climbSpeed = 0.5;
+	
+	Joystick gamepad;
 	public static final int
     BUTTON_A = 2, BUTTON_B = 3, BUTTON_X = 1,
     BUTTON_Y = 4, BUTTON_LB = 5, BUTTON_RB = 6,
@@ -39,10 +45,12 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+    	
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
+        
         talon0 = new CANTalon(0);
         talon1 = new CANTalon(1);
         talon2 = new CANTalon(2);
@@ -69,6 +77,7 @@ public class Robot extends IterativeRobot {
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
     public void autonomousInit() {
+    	
     	autoSelected = (String) chooser.getSelected();
 //		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
@@ -78,6 +87,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+    	
     	switch(autoSelected) {
     	case customAuto:
         //Put custom auto code here   
@@ -116,32 +126,29 @@ public class Robot extends IterativeRobot {
         	}
         	*/
         	
-        	drive.tankDrive(gamepad.getRawAxis(AXIS_Y)*0.5, gamepad.getRawAxis(AXIS_RSY)*0.5);
         	SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(AXIS_Y));
         	SmartDashboard.putNumber("Right Axis", gamepad.getRawAxis(AXIS_RSY));
         	SmartDashboard.putBoolean("Right Trigger", gamepad.getRawButton(BUTTON_RT));
-        	if(gamepad.getRawButton(BUTTON_RT)){
+        	SmartDashboard.putNumber("ClimbSpeed" , climbSpeed);
+        	
+        	drive.tankDrive(gamepad.getRawAxis(AXIS_Y)*0.5, gamepad.getRawAxis(AXIS_RSY)*0.5);
+        	
+        	if (gamepad.getRawButton(BUTTON_RT)) {
         		System.out.println("Increment");
         		climbSpeed += 0.1;
         		Timer.delay(1000);
-        	} else if(gamepad.getRawButton(BUTTON_LT)){
+        	}
+        	if (gamepad.getRawButton(BUTTON_LT)) {
         		climbSpeed -= 0.1;
         		System.out.println("Decrement");
         		Timer.delay(1000);
         	}
-        	SmartDashboard.putNumber("ClimbSpeed" , climbSpeed);
-        	System.out.println("Hello World");
-        	
-        	if(gamepad.getRawButton(BUTTON_Y)){
+        	if (gamepad.getRawButton(BUTTON_Y)) {
         		talon5.set(-0.9);
-        	}else if(gamepad.getRawButton(BUTTON_A)){
-        		talon5.set(0.9);
-        	}else{
-        		talon5.set(0);
         	}
-        
-        	
-        	
+        	if (gamepad.getRawButton(BUTTON_A)) {
+        		talon5.set(0.9);
+        	}
         }
     }
     
