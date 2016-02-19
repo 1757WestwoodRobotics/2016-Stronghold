@@ -25,9 +25,8 @@ public class Robot extends IterativeRobot {
     SendableChooser chooser;
     
     CANTalon talon0, talon1, talon2, talon3, talon4, talon5, talon6, talon7;
-    CANTalon[] talons = new CANTalon[8];
-   
-	RobotDrive drive;
+    
+    RobotDrive drive;
 	
 	int index = 0;
 	double climbSpeed = 0.5;
@@ -60,10 +59,11 @@ public class Robot extends IterativeRobot {
         talon6 = new CANTalon(6);
         talon7 = new CANTalon(7);
         
+        talon5.enableBrakeMode(true);
+        talon5.setInverted(true);
+        
         drive = new RobotDrive(talon0, talon1, talon2, talon3);
         gamepad = new Joystick(0);
-
-        talon5.enableBrakeMode(true);
         
     }
     
@@ -126,6 +126,8 @@ public class Robot extends IterativeRobot {
         	}
         	*/
         	
+        	//System.out.println("Teleop enabled");
+        	
         	SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(AXIS_Y));
         	SmartDashboard.putNumber("Right Axis", gamepad.getRawAxis(AXIS_RSY));
         	SmartDashboard.putBoolean("Right Trigger", gamepad.getRawButton(BUTTON_RT));
@@ -136,18 +138,23 @@ public class Robot extends IterativeRobot {
         	if (gamepad.getRawButton(BUTTON_RT)) {
         		System.out.println("Increment");
         		climbSpeed += 0.1;
-        		Timer.delay(1000);
-        	}
-        	if (gamepad.getRawButton(BUTTON_LT)) {
+        		Timer.delay(.5);
+        		climbSpeed = Math.min(1, climbSpeed);
+        	} else if (gamepad.getRawButton(BUTTON_LT)) {
         		climbSpeed -= 0.1;
         		System.out.println("Decrement");
-        		Timer.delay(1000);
+        		Timer.delay(.5);
+        		climbSpeed = Math.max(0, climbSpeed);	
+        	} else {
+        		System.out.println("NOTHING");
         	}
+        	
         	if (gamepad.getRawButton(BUTTON_Y)) {
-        		talon5.set(-0.9);
-        	}
-        	if (gamepad.getRawButton(BUTTON_A)) {
-        		talon5.set(0.9);
+        		talon5.set(climbSpeed);
+        	} else if (gamepad.getRawButton(BUTTON_A)) {
+        		talon5.set(-climbSpeed);
+        	} else {
+        		talon5.set(0);
         	}
         }
     }
