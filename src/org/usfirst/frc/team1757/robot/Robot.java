@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 //import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -29,10 +30,13 @@ public class Robot extends IterativeRobot {
 
 	CANTalon talon0, talon1, talon2, talon3, talon4, talon5, talon6, talon7;
 
-	RobotDrive drive;
+	//RobotDrive drive;
 
 	double climbSpeed;
 	double winchSpeed;
+	boolean winchLeft;
+	boolean winchRight;
+	boolean winchTotal;
 	boolean isRunning;
 
 	Joystick gamepad;
@@ -40,7 +44,7 @@ public class Robot extends IterativeRobot {
 	BUTTON_A = 2, BUTTON_B = 3, BUTTON_X = 1,
 	BUTTON_Y = 4, BUTTON_LB = 5, BUTTON_RB = 6,
 	BUTTON_LT = 7, BUTTON_RT = 8,
-	BUTTON_BACK = 9, BUTTON_START = 10,
+	BUTTON_BACK = 9, BUTTON_START = 10, BUTTON_LS = 11, BUTTON_RS = 12,
 	AXIS_X = 0, AXIS_Y = 1, AXIS_RSX = 2, AXIS_RSY = 3;
 
 	//Servo servo;
@@ -59,6 +63,7 @@ public class Robot extends IterativeRobot {
 		isRunning = false;
 		climbSpeed = 0;
 		winchSpeed = 0;
+		winchTotal = true;
 
 		talon0 = new CANTalon(0); //drive
 		talon1 = new CANTalon(1); //drive
@@ -72,10 +77,13 @@ public class Robot extends IterativeRobot {
 		talon5.enableBrakeMode(true);
 		talon5.setInverted(true);
 		talon6.setInverted(true);
-
+		talon6.enableBrakeMode(false);
+		
+		talon6.setControlMode(3);
+		talon7.setControlMode(3);
+		
 		//drive = new RobotDrive(talon0, talon1, talon2, talon3);
 		gamepad = new Joystick(0);
-		//previouslyYPressed = false;
 
 		//servo = new Servo(1);
 	}
@@ -119,16 +127,18 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		while(isEnabled() && isOperatorControl()) {
 
-			//System.out.println("Teleop enabled");
-
 			//SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(AXIS_Y));
 			//SmartDashboard.putNumber("Right Axis", gamepad.getRawAxis(AXIS_RSY));
-			SmartDashboard.putBoolean("Winch-Left Trigger", gamepad.getRawButton(BUTTON_LT));
-			SmartDashboard.putBoolean("Winch-Right Trigger", gamepad.getRawButton(BUTTON_RT));
-    		//SmartDashboard.putNumber("motorLeftCurrent", talon6.getOutputCurrent());
-			//SmartDashboard.putNumber("motorRightCurrent", talon7.getOutputCurrent());
-			SmartDashboard.putNumber("Winch-Speed", winchSpeed);
+			SmartDashboard.putBoolean("Winch-LeftTrigger", gamepad.getRawButton(BUTTON_LT));
+			SmartDashboard.putBoolean("Winch-RightTrigger", gamepad.getRawButton(BUTTON_RT));
+    		SmartDashboard.putNumber("motorLeftCurrent", talon6.getOutputCurrent());
+			SmartDashboard.putNumber("motorRightCurrent", talon7.getOutputCurrent());
+			SmartDashboard.putNumber("motorRightVoltage", talon6.getOutputVoltage());
+			SmartDashboard.putNumber("motorRightVoltage", talon6.getOutputVoltage());
 			SmartDashboard.putBoolean("Winch-GoingUp?", gamepad.getRawButton(BUTTON_X));
+			SmartDashboard.putBoolean("Winch Left", winchLeft);
+			SmartDashboard.putBoolean("Winch Right", winchRight);
+			SmartDashboard.putBoolean("Winch Total", winchTotal);
 			SmartDashboard.putNumber("Arm-ClimbSpeed" , climbSpeed);
 			SmartDashboard.putBoolean("Arm-Going Up?", gamepad.getRawButton(BUTTON_Y));
 			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
@@ -145,8 +155,33 @@ public class Robot extends IterativeRobot {
 					System.out.println("Press 'A' to re-enable.");
 				}
 			}
+			
+			if (gamepad.getRawButton(BUTTON_LS)) {
+				winchLeft = !winchLeft;
+				winchRight = false;
+				winchTotal = false;
+				System.out.println("Winch left: " + winchLeft);
+				Timer.delay(1);
+			}
+			
+			if (gamepad.getRawButton(BUTTON_RS)) {
+				winchRight = !winchRight;
+				winchLeft = false;
+				winchTotal = false;
+				System.out.println("Winch right: " + winchRight);
+				Timer.delay(1);
+			}
+			
+			if (gamepad.getRawButton(BUTTON_START)) {
+				winchTotal = !winchTotal;
+				winchLeft = false;
+				winchRight = false;
+				System.out.println("Winch total: " + winchTotal);
+				Timer.delay(1);
+			}
 
 			if (isRunning) {
+				
 				/*
 				 * if (gamepad.getRawButton(BUTTON_RT)) { System.out.println(
 				 * "Incrementing climbSpeed."); climbSpeed += 0.01;
@@ -157,7 +192,7 @@ public class Robot extends IterativeRobot {
 				 * Timer.delay(.1); //climbSpeed = Math.max(0, climbSpeed);
 				 * //This prevents climbSpeed from going below 0.0 }
 				 */
-
+				 
 				if (gamepad.getRawButton(BUTTON_LT)) {
 					winchSpeed -= .01;
 					System.out.println("Incrementing winchSpeed...Press X to move.");
@@ -170,9 +205,17 @@ public class Robot extends IterativeRobot {
 				}
 
 				if (gamepad.getRawButton(BUTTON_X)) {
-					talon6.set(winchSpeed);
-					talon7.set(winchSpeed);
-					// HOLD to move
+					if (winchTotal) {
+						talon6.set(winchSpeed);
+						talon7.set(winchSpeed);
+					} else if (winchLeft) {
+						talon6.set(winchSpeed);
+						talon7.set(0);
+					} else if (winchRight) {
+						talon7.set(winchSpeed);
+						talon6.set(0);
+					}
+					//HOLD to move
 				} else {
 					talon6.set(0);
 					talon7.set(0);
@@ -180,7 +223,7 @@ public class Robot extends IterativeRobot {
 
 				if (gamepad.getRawButton(BUTTON_Y)) {
 					talon5.set(climbSpeed);
-					// HOLD to MOVE/
+					//HOLD to MOVE
 				} else {
 					talon5.set(0);
 				}
@@ -200,7 +243,8 @@ public class Robot extends IterativeRobot {
 				climbSpeed = 0;
 				talon6.set(0);
 				talon7.set(0);
-				winchSpeed = 0;
+				//winchSpeedLeft = 0;
+				//winchSpeedRight = 0;
 			}
 
 			if (gamepad.getRawButton(BUTTON_B)) {
@@ -210,6 +254,7 @@ public class Robot extends IterativeRobot {
 				System.out.println("Button B has been pressed. Press A to re-enable.");
 				Timer.delay(1);
 			}
+			
 
 			//servo.set((gamepad.getRawAxis(AXIS_X)+1)/2);
 		}
