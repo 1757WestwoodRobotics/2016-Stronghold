@@ -32,8 +32,8 @@ public class Robot extends IterativeRobot {
 	RobotDrive drive;
 
 	double climbSpeed;
+	double winchSpeed;
 	boolean isRunning;
-	//boolean previouslyYPressed;
 
 	Joystick gamepad;
 	public static final int
@@ -58,18 +58,20 @@ public class Robot extends IterativeRobot {
 
 		isRunning = false;
 		climbSpeed = 0;
+		winchSpeed = 0;
 
-		talon0 = new CANTalon(0);
-		talon1 = new CANTalon(1);
-		talon2 = new CANTalon(2);
-		talon3 = new CANTalon(3);
-		talon4 = new CANTalon(4);
-		talon5 = new CANTalon(5);
-		talon6 = new CANTalon(6);
-		talon7 = new CANTalon(7);
+		talon0 = new CANTalon(0); //drive
+		talon1 = new CANTalon(1); //drive
+		talon2 = new CANTalon(2); //drive
+		talon3 = new CANTalon(3); //drive
+		talon4 = new CANTalon(4); //breach
+		talon5 = new CANTalon(5); //climb
+		talon6 = new CANTalon(6); //winch1
+		talon7 = new CANTalon(7); //winch2
 
 		talon5.enableBrakeMode(true);
 		talon5.setInverted(true);
+		talon6.setInverted(true);
 
 		//drive = new RobotDrive(talon0, talon1, talon2, talon3);
 		gamepad = new Joystick(0);
@@ -121,12 +123,15 @@ public class Robot extends IterativeRobot {
 
 			//SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(AXIS_Y));
 			//SmartDashboard.putNumber("Right Axis", gamepad.getRawAxis(AXIS_RSY));
-			SmartDashboard.putBoolean("Left Trigger", gamepad.getRawButton(BUTTON_LT));
-			SmartDashboard.putBoolean("Right Trigger", gamepad.getRawButton(BUTTON_RT));
-			SmartDashboard.putNumber("ClimbSpeed" , climbSpeed);
-			SmartDashboard.putBoolean("Going Up?", gamepad.getRawButton(BUTTON_Y));
-			SmartDashboard.putBoolean("isRunning?", isRunning);
-			//SmartDashboard.putBoolean("PreviouslyYPressed?", previouslyYPressed);
+			SmartDashboard.putBoolean("Winch-Left Trigger", gamepad.getRawButton(BUTTON_LT));
+			SmartDashboard.putBoolean("Winch-Right Trigger", gamepad.getRawButton(BUTTON_RT));
+    		//SmartDashboard.putNumber("motorLeftCurrent", talon6.getOutputCurrent());
+			//SmartDashboard.putNumber("motorRightCurrent", talon7.getOutputCurrent());
+			SmartDashboard.putNumber("Winch-Speed", winchSpeed);
+			SmartDashboard.putBoolean("Winch-GoingUp?", gamepad.getRawButton(BUTTON_X));
+			SmartDashboard.putNumber("Arm-ClimbSpeed" , climbSpeed);
+			SmartDashboard.putBoolean("Arm-Going Up?", gamepad.getRawButton(BUTTON_Y));
+			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
 
 			//drive.tankDrive(gamepad.getRawAxis(AXIS_Y)*0.5, gamepad.getRawAxis(AXIS_RSY)*0.5);
 
@@ -142,43 +147,71 @@ public class Robot extends IterativeRobot {
 			}
 
 			if (isRunning) {
-				if (gamepad.getRawButton(BUTTON_RT)) {
-					System.out.println("Incrementing climbSpeed.");
-					climbSpeed += 0.01;
-					Timer.delay(.1);
-					climbSpeed = Math.min(1, climbSpeed); //This prevents climbSpeed from going above 1.0
-				} else if (gamepad.getRawButton(BUTTON_LT)) {
-					climbSpeed -= 0.01;
-					System.out.println("Decrementing climbSpeed.");
-					Timer.delay(.1);
-					//climbSpeed = Math.max(0, climbSpeed); //This prevents climbSpeed from going below 0.0 
+				/*
+				 * if (gamepad.getRawButton(BUTTON_RT)) { System.out.println(
+				 * "Incrementing climbSpeed."); climbSpeed += 0.01;
+				 * Timer.delay(.1); climbSpeed = Math.min(1, climbSpeed); //This
+				 * prevents climbSpeed from going above 1.0 } else if
+				 * (gamepad.getRawButton(BUTTON_LT)) { climbSpeed -= 0.01;
+				 * System.out.println("Decrementing climbSpeed.");
+				 * Timer.delay(.1); //climbSpeed = Math.max(0, climbSpeed);
+				 * //This prevents climbSpeed from going below 0.0 }
+				 */
+
+				if (gamepad.getRawButton(BUTTON_LT)) {
+					winchSpeed -= .01;
+					System.out.println("Incrementing winchSpeed...Press X to move.");
+					Timer.delay(0.1);
+				} else if (gamepad.getRawButton(BUTTON_RT)) {
+					winchSpeed += .01;
+					System.out.println("Decrementing winchSpeed...Press X to move.");
+					winchSpeed = Math.min(1, winchSpeed);
+					Timer.delay(0.1);
+				}
+
+				if (gamepad.getRawButton(BUTTON_X)) {
+					talon6.set(winchSpeed);
+					talon7.set(winchSpeed);
+					// HOLD to move
+				} else {
+					talon6.set(0);
+					talon7.set(0);
 				}
 
 				if (gamepad.getRawButton(BUTTON_Y)) {
 					talon5.set(climbSpeed);
-					//HOLD to MOVE/
+					// HOLD to MOVE/
 				} else {
 					talon5.set(0);
 				}
-				
-				if (gamepad.getRawButton(BUTTON_X)) {
+
+				if (gamepad.getPOV(0) == 0) {
+					climbSpeed = 0.5;
+				} else if (gamepad.getPOV(0) == 90) {
+					climbSpeed = -0.25;
+				} else if (gamepad.getPOV(0) == 180) {
 					climbSpeed = -0.1;
+				} else if (gamepad.getPOV(0) == 270) {
+					climbSpeed = 0.25;
 				}
 
 			} else {
 				talon5.set(0);
 				climbSpeed = 0;
+				talon6.set(0);
+				talon7.set(0);
+				winchSpeed = 0;
 			}
 
 			if (gamepad.getRawButton(BUTTON_B)) {
 				climbSpeed = 0;
+				winchSpeed = 0;
 				isRunning = false;
-				System.out.println("Button B has been pressed.");
+				System.out.println("Button B has been pressed. Press A to re-enable.");
 				Timer.delay(1);
 			}
 
 			//servo.set((gamepad.getRawAxis(AXIS_X)+1)/2);
-			//previouslyYPressed = gamepad.getRawButton(BUTTON_Y);
 		}
 	}
 
