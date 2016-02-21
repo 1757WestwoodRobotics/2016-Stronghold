@@ -16,21 +16,21 @@ public class Breach {
 	double breachSpeed;
 	boolean isBreaching;
 	
-	static CANTalon talon4;
+	CANTalon talon4;
 	
 	public Breach(double breachSpeed, boolean isBreaching) {
 		this.breachSpeed = breachSpeed;
 		this.isBreaching = isBreaching;
 
 		talon4 = new CANTalon(4);
-
+		//talon4.setInverted(true); //MAYBE?
 	}
 	
 	
 	public void printBreachMessages(Joystick gamepad) {
 		SmartDashboard.putNumber("breachSpeed", breachSpeed);
 		SmartDashboard.putBoolean("isBreaching?", isBreaching);
-		//SmartDashboard.putNumber("Breach-motorCurrent", talon4.getOutputCurrent());
+		SmartDashboard.putNumber("Breach-motorCurrent", talon4.getOutputCurrent());
 	}
 	
 	public void doBreach(Joystick gamepad) {

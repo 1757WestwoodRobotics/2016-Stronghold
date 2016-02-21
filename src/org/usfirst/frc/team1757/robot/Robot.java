@@ -4,7 +4,7 @@ package org.usfirst.frc.team1757.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
-//import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1757.robot.Constants;
 
@@ -21,10 +21,10 @@ import org.usfirst.frc.team1757.robot.Constants;
  */
 public class Robot extends IterativeRobot {
 
-	//final String defaultAuto = "Default";
-	//final String customAuto = "My Auto";
-	//String autoSelected;
-	//SendableChooser chooser;
+	final String defaultAuto = "Default";
+	final String customAuto = "My Auto";
+	String autoSelected;
+	SendableChooser chooser;
 
 	boolean isRunning;
 	
@@ -33,7 +33,7 @@ public class Robot extends IterativeRobot {
 	Winch winch; 
 	Breach breach;
 	Climb climb;
-	Drive drive;
+	//Drive drive;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -48,12 +48,12 @@ public class Robot extends IterativeRobot {
 		winch = new Winch(0.0, false);
 		breach = new Breach(0.0, false);
 		climb = new Climb(0.0, false);
-		drive = new Drive(0.0, false);
+		//drive = new Drive(0.0, false);
 		
-		/*chooser = new SendableChooser();
+		chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("My Auto", customAuto);
-		SmartDashboard.putData("Auto choices", chooser); */
+		SmartDashboard.putData("Auto choices", chooser);
 	}
 
 
@@ -68,9 +68,9 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autonomousInit() {
 
-		//autoSelected = (String) chooser.getSelected();
-		//		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
-		//System.out.println("Auto selected: " + autoSelected);
+		autoSelected = (String) chooser.getSelected();
+		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
+		System.out.println("Auto selected: " + autoSelected);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autonomousPeriodic() {
 
-		/* switch(autoSelected) {
+		switch(autoSelected) {
 		case customAuto:
 			//Put custom auto code here   
 			break;
@@ -86,13 +86,17 @@ public class Robot extends IterativeRobot {
 		default:
 			//Put default auto code here
 			break;
-		} */
+		}
 	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		SmartDashboard.putString("Winch", "LT: Down, RT: Up, X: Act");
+		SmartDashboard.putString("Breach", "BACK: Up, START: Down, LS: Act");
+		SmartDashboard.putString("Climb", "POV0: Up, POV180: Down, Y: Act");
+		SmartDashboard.putString("Drive", "STICK_Y: Down, RT: STICK_RSY");
 		while(isEnabled() && isOperatorControl()) {
 
 			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
@@ -111,8 +115,8 @@ public class Robot extends IterativeRobot {
 			}
 			
 			if (isRunning) {
-				drive.printDriveMessages(gamepad);
-				drive.doDrive(gamepad);
+				//drive.printDriveMessages(gamepad);
+				//drive.doDrive(gamepad);
 				breach.printBreachMessages(gamepad);
 				breach.doBreach(gamepad);
 				climb.printClimbMessages(gamepad);
@@ -140,23 +144,26 @@ public class Robot extends IterativeRobot {
 		
 		winch.winchSpeed = 0;
 		winch.isWinching = false;
-		Winch.talon6.set(0);
-		Winch.talon7.set(0);
+		winch.talon6.set(0);
+		winch.talon7.set(0);
+		winch.printWinchMessages(gamepad);
 		
 		breach.breachSpeed = 0;
 		breach.isBreaching = false;
-		Breach.talon4.set(0);
+		breach.talon4.set(0);
+		breach.printBreachMessages(gamepad);
 		
 		climb.climbSpeed = 0;
 		climb.isClimbing = false;
-		Climb.talon5.set(0);
+		climb.talon5.set(0);
+		climb.printClimbMessages(gamepad);
 		
-		drive.driveSpeed = 0;
-		drive.isDriving = false;
-		Drive.talon0.set(0);
-		Drive.talon1.set(0);
-		Drive.talon2.set(0);
-		Drive.talon3.set(0);
+		//drive.driveSpeed = 0;
+		//drive.isDriving = false;
+		//Drive.talon0.set(0);
+		//Drive.talon1.set(0);
+		//Drive.talon2.set(0);
+		//Drive.talon3.set(0);
 		
 		System.out.println("Robot didStop()...");
 		Timer.delay(1);

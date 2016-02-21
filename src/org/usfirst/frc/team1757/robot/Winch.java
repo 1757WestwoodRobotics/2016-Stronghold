@@ -19,7 +19,7 @@ public class Winch {
 	double winchSpeed;
 	boolean isWinching;
 	
-	static CANTalon talon6, talon7;
+	CANTalon talon6, talon7;
 	//static Servo servo;
 	
 	public Winch(double winchSpeed, boolean isWinching) {
@@ -36,10 +36,9 @@ public class Winch {
 	
 	public void printWinchMessages(Joystick gamepad) {
 		SmartDashboard.putBoolean("Winch-GoingUp?", isWinching);
-		SmartDashboard.putBoolean("Winch Going Up", isWinching);
 		SmartDashboard.putNumber("winchSpeed", winchSpeed);
-		//SmartDashboard.putNumber("Winch-leftMotorCurrent", talon6.getOutputCurrent());
-		//SmartDashboard.putNumber("Winch-rightMotorCurrent", talon7.getOutputCurrent());
+		SmartDashboard.putNumber("Winch-leftMotorCurrent", talon6.getOutputCurrent());
+		SmartDashboard.putNumber("Winch-rightMotorCurrent", talon7.getOutputCurrent());
 	}
 	
 	public void doWinch(Joystick gamepad) {

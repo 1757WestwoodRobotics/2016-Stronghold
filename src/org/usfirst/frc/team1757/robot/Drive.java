@@ -12,9 +12,9 @@ public class Drive {
 	double driveSpeed;
 	boolean isDriving;
 	
-	static RobotDrive drive;
+	RobotDrive drive;
 
-	static CANTalon talon0, talon1, talon2, talon3;
+	CANTalon talon0, talon1, talon2, talon3;
 
 	public Drive(double driveSpeed, boolean isDriving) {
 		this.driveSpeed = driveSpeed;
