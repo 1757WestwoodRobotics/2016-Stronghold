@@ -23,7 +23,6 @@ public class Breach {
 		this.isBreaching = isBreaching;
 
 		talon4 = new CANTalon(4);
-
 	}
 	
 	
@@ -34,7 +33,7 @@ public class Breach {
 	}
 	
 	public void doBreach(Joystick gamepad) {
-		if (gamepad.getRawButton(Constants.BUTTON_BACK)) {
+		if (gamepad.getRawButton(Constants.Gamepad)) {
 			breachSpeed -= 0.1;
 			System.out.println("Decrementing breachSpeed...");
 			Timer.delay(0.1);

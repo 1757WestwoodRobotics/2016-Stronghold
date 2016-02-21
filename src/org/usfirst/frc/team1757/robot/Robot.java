@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Timer;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1757.robot.Constants;
+import org.usfirst.frc.team1757.robot.Constants.Gamepad_LogitechDual;
 
 /**
  * @author Larry Tseng
@@ -34,17 +35,15 @@ public class Robot extends IterativeRobot {
 	Breach breach;
 	Climb climb;
 	Drive drive;
-
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	public void robotInit() {
-		
 		isRunning = false;
 
 		gamepad = new Joystick(0);
-		
 		winch = new Winch(0.0, false);
 		breach = new Breach(0.0, false);
 		climb = new Climb(0.0, false);
@@ -97,7 +96,7 @@ public class Robot extends IterativeRobot {
 
 			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
 
-			if (gamepad.getRawButton(Constants.BUTTON_A)) {
+			if (gamepad.getRawButton(constantPad.BUTTON_A)) {
 				isRunning = !isRunning;
 				System.out.println("button A has been pressed - wait 1 second.");
 				Timer.delay(1);
@@ -120,7 +119,7 @@ public class Robot extends IterativeRobot {
 				winch.printWinchMessages(gamepad);
 				winch.doWinch(gamepad);
 				
-				if (gamepad.getRawButton(Constants.BUTTON_B)) {
+				if (gamepad.getRawButton(constantPad.BUTTON_B)) {
 					didStop();
 					System.out.println("Button B has been pressed. Press A to re-enable.");
 				}
