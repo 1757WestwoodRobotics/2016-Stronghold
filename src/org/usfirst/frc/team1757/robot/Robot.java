@@ -50,10 +50,6 @@ public class Robot extends IterativeRobot {
 		climb = new Climb(0.0, false);
 		drive = new Drive(0.0, false);
 		
-		chooser = new SendableChooser();
-		chooser.addDefault("Default Auto", defaultAuto);
-		chooser.addObject("My Auto", customAuto);
-		SmartDashboard.putData("Auto choices", chooser);
 	}
 
 
@@ -68,9 +64,6 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autonomousInit() {
 
-		autoSelected = (String) chooser.getSelected();
-		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
-		System.out.println("Auto selected: " + autoSelected);
 	}
 
 	/**
@@ -78,15 +71,6 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autonomousPeriodic() {
 
-		switch(autoSelected) {
-		case customAuto:
-			//Put custom auto code here   
-			break;
-		case defaultAuto:
-		default:
-			//Put default auto code here
-			break;
-		}
 	}
 
 	/**
