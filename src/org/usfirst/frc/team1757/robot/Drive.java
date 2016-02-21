@@ -24,23 +24,23 @@ public class Drive {
 		talon2 = new CANTalon(2);
 		talon3 = new CANTalon(3);
 		
-		
 		drive = new RobotDrive(talon0, talon1, talon2, talon3);
 	}
 
 	public void printDriveMessages(Joystick gamepad) {
-		SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(Constants.AXIS_Y)*0.5);
-		SmartDashboard.putNumber("Right Axis", gamepad.getRawAxis(Constants.AXIS_RSY)*0.5);
+		SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(Constants.AXIS_Y));
+		SmartDashboard.putNumber("Right Axis", gamepad.getRawAxis(Constants.AXIS_RSY));
 		SmartDashboard.putBoolean("isDriving?", isDriving);
-		/*
+		
+
 		SmartDashboard.putNumber("talon0-motorCurrent", talon0.getOutputCurrent());
 		SmartDashboard.putNumber("talon1-motorCurrent", talon1.getOutputCurrent());
 		SmartDashboard.putNumber("talon2-motorCurrent", talon2.getOutputCurrent());
 		SmartDashboard.putNumber("talon3-motorCurrent", talon3.getOutputCurrent());
-		*/
+	
 	}
 
 	public void doDrive(Joystick gamepad) {
-		drive.tankDrive(gamepad.getRawAxis(Constants.AXIS_Y)*0.5, gamepad.getRawAxis(Constants.AXIS_RSY)*0.5);
+		drive.tankDrive(gamepad.getRawAxis(Constants.AXIS_Y), gamepad.getRawAxis(Constants.AXIS_RSY));
 	}
 }
