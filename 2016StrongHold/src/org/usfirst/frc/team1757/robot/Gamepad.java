@@ -10,8 +10,5 @@ public abstract class Gamepad extends Joystick {
 		super(port);
 		// TODO Auto-generated constructor stub
 	}
-	public Gamepad(int port, int numAxisTypes, int numButtonTypes) {
-		
-	}
 }
 

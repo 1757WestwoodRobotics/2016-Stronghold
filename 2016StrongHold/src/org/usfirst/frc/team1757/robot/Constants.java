@@ -63,6 +63,21 @@ public class Constants {
     	AXIS_X = 0, AXIS_Y = 1, AXIS_RSX = 2, AXIS_RSY = 3;
 	}
 	
+	public static final class Gamepad_Gamecube {
+		private Gamepad_Gamecube() {}
+		
+		public static final int PORT = 1;
+		public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.4f;
+		public static final String MODE = "GAMECUBE";
+		
+		public static final int
+    	BUTTON_A = 2, BUTTON_B = 3, BUTTON_X = 1,
+    	BUTTON_Y = 4, BUTTON_Z = 8,
+    	BUTTON_RT = 6, BUTTON_LT = 5, BUTTON_START = 10,
+    	AXIS_X = 0, AXIS_Y = 1, AXIS_RSX = 5, AXIS_RSY = 2,
+    	AXIS_LT = 3, AXIS_RT = 4;
+	}
+	
 	public static final class Gamepad_LogitechF310 {
 		private Gamepad_LogitechF310(){}
         public static final int PORT = 1;

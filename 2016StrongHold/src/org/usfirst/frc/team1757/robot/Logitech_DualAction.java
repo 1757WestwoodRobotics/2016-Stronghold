@@ -3,6 +3,11 @@ package org.usfirst.frc.team1757.robot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class Logitech_DualAction extends Gamepad {
+
+	public Logitech_DualAction(int port) {
+		super(port);
+		// TODO Auto-generated constructor stub
+	}
 	/*
 	
 	private float axisInversion, deadZone;
