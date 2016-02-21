@@ -30,9 +30,9 @@ public class Robot extends IterativeRobot {
 	
 	Joystick gamepad;
 	
-	//Winch winch; 
-	//Breach breach;
-	//Climb climb;
+	Winch winch; 
+	Breach breach;
+	Climb climb;
 	Drive drive;
 
 	/**
@@ -45,9 +45,9 @@ public class Robot extends IterativeRobot {
 
 		gamepad = new Joystick(0);
 		
-		//winch = new Winch(0.0, false);
-		//breach = new Breach(0.0, false);
-		//climb = new Climb(0.0, false);
+		winch = new Winch(0.0, false);
+		breach = new Breach(0.0, false);
+		climb = new Climb(0.0, false);
 		drive = new Drive(0.0, false);
 		
 		chooser = new SendableChooser();
@@ -112,9 +112,9 @@ public class Robot extends IterativeRobot {
 			if (isRunning) {
 				
 				drive.doDrive(gamepad);
-				/* breach.doBreach(gamepad);
+				breach.doBreach(gamepad);
 				climb.doClimb(gamepad);
-				winch.doWinch(gamepad); */
+				winch.doWinch(gamepad);
 				
 				printRobotMessages();
 	
@@ -139,16 +139,16 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Breach", "BACK: Up, START: Down, LS: Act");
 		SmartDashboard.putString("Climb", "POV0: Up, POV180: Down, Y: Act");
 		SmartDashboard.putString("Drive", "STICK_Y: Down, RT: STICK_RSY");
-		/* breach.printBreachMessages(gamepad);
+		breach.printBreachMessages(gamepad);
 		climb.printClimbMessages(gamepad);
-		winch.printWinchMessages(gamepad); */
+		winch.printWinchMessages(gamepad);
 		drive.printDriveMessages(gamepad);
 	}
 	
 	public void didStop() {
 		isRunning = false;
 		
-		/*winch.winchSpeed = 0;
+		winch.winchSpeed = 0;
 		winch.isWinching = false;
 		winch.talon6.set(0);
 		winch.talon7.set(0);
@@ -159,7 +159,7 @@ public class Robot extends IterativeRobot {
 		
 		climb.climbSpeed = 0;
 		climb.isClimbing = false;
-		climb.talon5.set(0); */
+		climb.talon5.set(0);
 		
 		drive.driveSpeed = 0;
 		drive.isDriving = false;
