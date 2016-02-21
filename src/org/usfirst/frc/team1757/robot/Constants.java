@@ -18,7 +18,7 @@ public class Constants {
 	}
 	
 	public void setConstants(GamepadTypes type) {
-		if (type = GamepadTypes.Logitech_DualAction) {
+		if (type == GamepadTypes.Logitech_DualAction) {
 			PORT = Constants.Gamepad_LogitechDual.PORT;
 			DEADZONE = Constants.Gamepad_LogitechDual.DEADZONE;
 			INVERTED = Constants.Gamepad_LogitechDual.INVERTED;
@@ -43,7 +43,7 @@ public class Constants {
 			AXIS_RSX = Constants.Gamepad_LogitechDual.AXIS_RSX;
 			AXIS_RSY = Constants.Gamepad_LogitechDual.AXIS_RSY;
 		}
-		else if (type = GamepadTypes.Logitech_F310) {
+		else if (type == GamepadTypes.Logitech_F310) {
 			PORT = Constants.Gamepad_LogitechF310.PORT;
 			DEADZONE = Constants.Gamepad_LogitechF310.DEADZONE;
 			INVERTED = Constants.Gamepad_LogitechF310.INVERTED;
@@ -68,7 +68,7 @@ public class Constants {
 			AXIS_RSX = Constants.Gamepad_LogitechF310.AXIS_RSX;
 			AXIS_RSY = Constants.Gamepad_LogitechF310.AXIS_RSY;
 		}
-		else if (type = GamepadTypes.Gamecube) {
+		else if (type == GamepadTypes.Gamecube) {
 			PORT = Constants.Gamepad_Gamecube.PORT;
 			DEADZONE = Constants.Gamepad_Gamecube.DEADZONE;
 			INVERTED = Constants.Gamepad_Gamecube.INVERTED;
@@ -93,7 +93,7 @@ public class Constants {
 			AXIS_RSX = Constants.Gamepad_Gamecube.AXIS_RSX;
 			AXIS_RSY = Constants.Gamepad_Gamecube.AXIS_RSY;
 		}
-		else if (type = GamepadTypes.Xbox360) {
+		else if (type == GamepadTypes.Xbox360) {
 			PORT = Constants.Gamepad_Xbox360.PORT;
 			DEADZONE = Constants.Gamepad_Xbox360.DEADZONE;
 			INVERTED = Constants.Gamepad_Xbox360.INVERTED;
