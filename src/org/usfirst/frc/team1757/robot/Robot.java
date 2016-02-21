@@ -93,13 +93,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		SmartDashboard.putString("Winch", "LT: Down, RT: Up, X: Act");
-		SmartDashboard.putString("Breach", "BACK: Up, START: Down, LS: Act");
-		SmartDashboard.putString("Climb", "POV0: Up, POV180: Down, Y: Act");
-		SmartDashboard.putString("Drive", "STICK_Y: Down, RT: STICK_RSY");
 		while(isEnabled() && isOperatorControl()) {
-
-			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
 
 			if (gamepad.getRawButton(Constants.BUTTON_A)) {
 				isRunning = !isRunning;
@@ -115,15 +109,14 @@ public class Robot extends IterativeRobot {
 			}
 			
 			if (isRunning) {
-				//drive.printDriveMessages(gamepad);
+				
 				//drive.doDrive(gamepad);
-				breach.printBreachMessages(gamepad);
 				breach.doBreach(gamepad);
-				climb.printClimbMessages(gamepad);
 				climb.doClimb(gamepad);
-				winch.printWinchMessages(gamepad);
 				winch.doWinch(gamepad);
 				
+				printRobotMessages();
+	
 				if (gamepad.getRawButton(Constants.BUTTON_B)) {
 					didStop();
 					System.out.println("Button B has been pressed. Press A to re-enable.");
@@ -139,6 +132,18 @@ public class Robot extends IterativeRobot {
 
 	}
 	
+	public void printRobotMessages() {
+		SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
+		SmartDashboard.putString("Winch", "LT: Down, RT: Up, X: Act");
+		SmartDashboard.putString("Breach", "BACK: Up, START: Down, LS: Act");
+		SmartDashboard.putString("Climb", "POV0: Up, POV180: Down, Y: Act");
+		SmartDashboard.putString("Drive", "STICK_Y: Down, RT: STICK_RSY");
+		breach.printBreachMessages(gamepad);
+		climb.printClimbMessages(gamepad);
+		winch.printWinchMessages(gamepad);
+		//drive.printDriveMessages(gamepad);
+	}
+	
 	public void didStop() {
 		isRunning = false;
 		
@@ -146,17 +151,14 @@ public class Robot extends IterativeRobot {
 		winch.isWinching = false;
 		winch.talon6.set(0);
 		winch.talon7.set(0);
-		winch.printWinchMessages(gamepad);
-		
+
 		breach.breachSpeed = 0;
 		breach.isBreaching = false;
 		breach.talon4.set(0);
-		breach.printBreachMessages(gamepad);
 		
 		climb.climbSpeed = 0;
 		climb.isClimbing = false;
 		climb.talon5.set(0);
-		climb.printClimbMessages(gamepad);
 		
 		//drive.driveSpeed = 0;
 		//drive.isDriving = false;
@@ -164,6 +166,8 @@ public class Robot extends IterativeRobot {
 		//Drive.talon1.set(0);
 		//Drive.talon2.set(0);
 		//Drive.talon3.set(0);
+		
+		printRobotMessages();
 		
 		System.out.println("Robot didStop()...");
 		Timer.delay(1);
