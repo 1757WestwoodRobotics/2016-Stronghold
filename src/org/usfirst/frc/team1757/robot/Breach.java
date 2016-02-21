@@ -33,7 +33,7 @@ public class Breach {
 	}
 	
 	public void doBreach(Joystick gamepad) {
-		if (gamepad.getRawButton(Constants.Gamepad)) {
+		if (gamepad.getRawButton(Constants.BUTTON_BACK)) {
 			breachSpeed -= 0.1;
 			System.out.println("Decrementing breachSpeed...");
 			Timer.delay(0.1);

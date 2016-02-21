@@ -6,8 +6,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 //import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team1757.robot.Constants;
-import org.usfirst.frc.team1757.robot.Constants.Gamepad_LogitechDual;
 
 /**
  * @author Larry Tseng
@@ -49,6 +47,7 @@ public class Robot extends IterativeRobot {
 		climb = new Climb(0.0, false);
 		drive = new Drive(0.0, false);
 		
+		Constants.setConstants(Constants.GamepadTypes.Logitech_DualAction);
 		/*chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("My Auto", customAuto);
@@ -96,7 +95,7 @@ public class Robot extends IterativeRobot {
 
 			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
 
-			if (gamepad.getRawButton(constantPad.BUTTON_A)) {
+			if (gamepad.getRawButton(Constants.BUTTON_A)) {
 				isRunning = !isRunning;
 				System.out.println("button A has been pressed - wait 1 second.");
 				Timer.delay(1);
@@ -119,7 +118,7 @@ public class Robot extends IterativeRobot {
 				winch.printWinchMessages(gamepad);
 				winch.doWinch(gamepad);
 				
-				if (gamepad.getRawButton(constantPad.BUTTON_B)) {
+				if (gamepad.getRawButton(Constants.BUTTON_B)) {
 					didStop();
 					System.out.println("Button B has been pressed. Press A to re-enable.");
 				}

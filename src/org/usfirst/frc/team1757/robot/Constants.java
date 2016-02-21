@@ -3,7 +3,7 @@ package org.usfirst.frc.team1757.robot;
 public class Constants {
 	private Constants(){}
 	
-	public int PORT;
+	public static int PORT;
 	public static float DEADZONE, INVERTED, TRIGGERZONE, SENSITIVITY;
 	public static String MODE;
 			
@@ -17,7 +17,7 @@ public class Constants {
 		Logitech_DualAction, Logitech_F310, Xbox360, Gamecube
 	}
 	
-	public void setConstants(GamepadTypes type) {
+	public static void setConstants(GamepadTypes type) {
 		if (type == GamepadTypes.Logitech_DualAction) {
 			PORT = Constants.Gamepad_LogitechDual.PORT;
 			DEADZONE = Constants.Gamepad_LogitechDual.DEADZONE;
