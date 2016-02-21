@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1757.robot;
 
+import edu.wpi.first.wpilibj.CANSpeedController;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -12,20 +13,40 @@ public class Drive {
 	double driveSpeed;
 	boolean isDriving;
 	
-	static RobotDrive drive;
+	RobotDrive drive;
 
-	static CANTalon talon0, talon1, talon2, talon3;
+    static CANTalon frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor;
+    PIDController pidController;
+    CANTeamDrive leftTeam, rightTeam, rightTeamInverted, pidTeam;
 
+    double setpoint, initialTurn;
+    
+    driveTypes driveType;
+	
 	public Drive(double driveSpeed, boolean isDriving) {
 		this.driveSpeed = driveSpeed;
 		this.isDriving = isDriving;
-		talon0 = new CANTalon(0);
-		talon1 = new CANTalon(1);
-		talon2 = new CANTalon(2);
-		talon3 = new CANTalon(3);
+		setpoint = 0.0;
+		initialTurn = 10;
+		driveType = driveTypes.ArcadeDrive;
 		
+		frontLeftMotor = new CANTalon(0);
+		backLeftMotor = new CANTalon(1);
+		frontRightMotor = new CANTalon(2);
+		backRightMotor = new CANTalon(3);
 		
-		drive = new RobotDrive(talon0, talon1, talon2, talon3);
+		leftTeam = new CANTeamDrive(new CANTalon[] {frontLeftMotor, backLeftMotor});
+		rightTeam = new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
+		rightTeamInverted = new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
+		rightTeamInverted.setInverted(true);
+		
+		pidTeam = new CANTeamDrive(new CANSpeedController[] {leftTeam,rightTeamInverted});
+		
+		drive = new RobotDrive(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
+	}
+	
+	public enum driveTypes {
+		ArcadeDrive, TankDrive, PIDArcadeDrive;
 	}
 
 	public void printDriveMessages(Joystick gamepad) {
@@ -40,7 +61,44 @@ public class Drive {
 		*/
 	}
 
+	public void doTankDrive(Joystick gamepad) {
+		drive.tankDrive(gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY, gamepad.getRawAxis(Constants.AXIS_RSY)*Constants.SENSITIVITY);
+	}
+	
+	public void doArcadeDrive(Joystick gamepad) {
+		drive.arcadeDrive(gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY, gamepad.getRawAxis(Constants.AXIS_X)*Constants.SENSITIVITY);
+	}
+	
+	public void doPIDDrive(Joystick gamepad) {
+		pidController.setDrive(gamepad.getY()*Constants.SENSITIVITY);
+		
+		if (gamepad.getRawButton(Constants.Gamepad_LogitechDual.BUTTON_B)) {
+			pidController.disable();
+			driveType = driveTypes.ArcadeDrive;
+		}
+		
+		if (gamepad.getRawAxis(Constants.AXIS_Y) > .1) {
+			setpoint += gamepad.getRawAxis(3)*Constants.PID_.turnConstant;
+			pidController.setSetpoint(setpoint);
+		}
+		
+		if (gamepad.getRawAxis(Constants.AXIS_Y) < -.1) {
+			setpoint += gamepad.getRawAxis(3)*Constants.PID_.turnConstant;
+			pidController.setSetpoint(setpoint);
+		}
+	}
+	
 	public void doDrive(Joystick gamepad) {
-		drive.tankDrive(gamepad.getRawAxis(Constants.AXIS_Y)*0.5, gamepad.getRawAxis(Constants.AXIS_RSY)*0.5);
+		if (driveType == driveTypes.ArcadeDrive) {
+			doArcadeDrive(gamepad);
+		}
+		
+		if (driveType == driveTypes.TankDrive) {
+			doTankDrive(gamepad);
+		}
+		
+		if (driveType == driveTypes.PIDArcadeDrive) {
+			doPIDDrive(gamepad);
+		}
 	}
 }

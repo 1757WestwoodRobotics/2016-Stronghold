@@ -40,7 +40,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 		isRunning = false;
-
+		//TODO: FIX the fucking constructors
 		gamepad = new Joystick(0);
 		winch = new Winch(0.0, false);
 		breach = new Breach(0.0, false);
@@ -151,10 +151,10 @@ public class Robot extends IterativeRobot {
 		
 		drive.driveSpeed = 0;
 		drive.isDriving = false;
-		Drive.talon0.set(0);
-		Drive.talon1.set(0);
-		Drive.talon2.set(0);
-		Drive.talon3.set(0);
+		Drive.frontLeftMotor.set(0);
+		Drive.backRightMotor.set(0);
+		Drive.frontRightMotor.set(0);
+		Drive.backLeftMotor.set(0);
 		
 		System.out.println("Robot didStop()...");
 		Timer.delay(1);
