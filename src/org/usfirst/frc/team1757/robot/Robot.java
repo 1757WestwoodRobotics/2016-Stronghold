@@ -104,16 +104,20 @@ public class Robot extends IterativeRobot {
 				
 				if (isRunning) {
 					System.out.println("Ready.");
-				} else if (!isRunning) {
+				} else {
 					didStop();
 					System.out.println("Robot didStop()... Press 'A' to re-enable.");
 				}
 			}
 			
 			if (isRunning) {
+				drive.printDriveMessages(gamepad);
 				drive.doDrive(gamepad);
+				breach.printBreachMessages(gamepad);
 				breach.doBreach(gamepad);
+				climb.printClimbMessages(gamepad);
 				climb.doClimb(gamepad);
+				winch.printWinchMessages(gamepad);
 				winch.doWinch(gamepad);
 				
 				if (gamepad.getRawButton(Constants.BUTTON_B)) {

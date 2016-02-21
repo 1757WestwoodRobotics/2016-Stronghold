@@ -25,14 +25,9 @@ public class Winch {
 	public Winch(double winchSpeed, boolean isWinching) {
 		this.winchSpeed = winchSpeed;
 		this.isWinching = isWinching;
-	}
-
-	static {
+		
 		talon6 = new CANTalon(6);
 		talon7 = new CANTalon(7);
-		
-		talon6.set(6);
-		talon7.set(7);
 		
 		talon6.setInverted(true);
 		talon6.enableBrakeMode(false);
@@ -40,22 +35,22 @@ public class Winch {
 	}
 	
 	public void printWinchMessages(Joystick gamepad) {
-		gamepad.getRawButton(Constants.BUTTON_A);
-		SmartDashboard.putBoolean("Winch-GoingUp?", gamepad.getRawButton(Constants.BUTTON_X));
+		SmartDashboard.putBoolean("Winch-GoingUp?", isWinching);
+		SmartDashboard.putBoolean("Winch Going Up", isWinching);
 		SmartDashboard.putNumber("winchSpeed", winchSpeed);
-		SmartDashboard.putNumber("Winch-leftMotorCurrent", talon6.getOutputCurrent());
-		SmartDashboard.putNumber("Winch-rightMotorCurrent", talon7.getOutputCurrent());
+		//SmartDashboard.putNumber("Winch-leftMotorCurrent", talon6.getOutputCurrent());
+		//SmartDashboard.putNumber("Winch-rightMotorCurrent", talon7.getOutputCurrent());
 	}
 	
 	public void doWinch(Joystick gamepad) {
 		
 		if (gamepad.getRawButton(Constants.BUTTON_LT)) {
-			winchSpeed -= 0.1;
+			winchSpeed -= 0.01;
 			System.out.println("Decrementing winchSpeed...");
 			Timer.delay(0.1);
 			Math.max(-1, winchSpeed);
 		} else if (gamepad.getRawButton(Constants.BUTTON_RT)) {
-			winchSpeed += 0.1;
+			winchSpeed += 0.01;
 			System.out.println("Incrementing winchSpeed...");
 			Timer.delay(0.1);
 			Math.min(1, winchSpeed);
