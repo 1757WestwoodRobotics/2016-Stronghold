@@ -34,18 +34,18 @@ public class Breach {
 	
 	public void doBreach(Joystick gamepad) {
 		if (gamepad.getRawButton(Constants.BUTTON_BACK)) {
-			breachSpeed -= 0.1;
+			breachSpeed -= 0.01;
 			System.out.println("Decrementing breachSpeed...");
 			Timer.delay(0.1);
 			breachSpeed = Math.max(-1, breachSpeed);
 		} else if (gamepad.getRawButton(Constants.BUTTON_START)) {
-			breachSpeed += 0.1;
+			breachSpeed += 0.01;
 			System.out.println("Incrementing breachSpeed...");
 			Timer.delay(0.1);
 			breachSpeed = Math.min(1, breachSpeed);
 		}
 		
-		if (gamepad.getRawButton(Constants.BUTTON_LS)) {
+		if (gamepad.getRawButton(Constants.BUTTON_X)) {
 			talon4.set(breachSpeed);
 			isBreaching = true;
 		} else {

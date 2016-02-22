@@ -54,17 +54,18 @@ public class Robot extends IterativeRobot {
 	 * You can add additional auto modes by adding additional comparisons to the switch structure below with additional strings.
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
-	public void autoDriveInit() {
+	public void autonomousInit() {
 		System.out.println("AUTO mode has started.");
-		drive.setDriveType(Drive.driveTypes.AutonomousDrive);
+		//drive.setDriveType(Drive.driveTypes.);
 	}
 
 	/**
-	 * This function is called periodically during autoDrive
+	 * This function is called periodically during autonomous
 	 */
-	public void autoDrivePeriodic() {
+	public void autonomousPeriodic() {
 		while(isEnabled() && isAutonomous()) {
 			Autonomous.executeAutonomous(Defenses.LOW_BAR, drive);
+			System.out.println("Robot is autonomously driving");
 		}
 	}
 
@@ -112,7 +113,7 @@ public class Robot extends IterativeRobot {
 				climb.printClimbMessages(gamepad);
 				climb.doClimb(gamepad);
 				winch.printWinchMessages(gamepad);
-				winch.doWinch(gamepad);
+				//winch.doWinch(gamepad);
 				
 				if (gamepad.getRawButton(Constants.BUTTON_B)) {
 					didStop();

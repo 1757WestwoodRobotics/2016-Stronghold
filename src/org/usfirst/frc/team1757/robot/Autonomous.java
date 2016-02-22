@@ -11,6 +11,7 @@ public class Autonomous {
 	}
 	public static void crossLowBar(Drive autoDrive) {
 		autoDrive.doAutoDrive(.3, 2);
+		System.out.println("crossing Low Bar");
 	}
 	public static void crossRockWall(Drive autoDrive) {
 
@@ -35,11 +36,15 @@ public class Autonomous {
 	}
 	
 	public static void executeAutonomous(Defenses defense, Drive autoDrive) {
-		
 		switch (defense) {
-		case LOW_BAR: crossLowBar(autoDrive);
-		case ROCK_WALL: crossRockWall(autoDrive);
-		default: System.out.println("NO DEFENSE SELECTED");
+		case LOW_BAR: 
+			crossLowBar(autoDrive); 
+			break;
+		case ROCK_WALL: 
+			crossRockWall(autoDrive); 
+			break;
+		default: 
+			System.out.println("NO DEFENSE SELECTED");
 			break; 
 		}
 	}

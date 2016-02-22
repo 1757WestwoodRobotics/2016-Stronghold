@@ -162,7 +162,7 @@ public class Constants {
 	public static final class Camera {
 		private Camera(){}
 		public static final int 
-		CURRCAM = 0, MAX_FPS = 30, QUALITY = 100, SLEEP_TIME = 100;
+		CURRCAM = 0, MAX_FPS = 30, QUALITY = 10, SLEEP_TIME = 100;
 	}
 	
 	public static final class Gamepad_LogitechDual {

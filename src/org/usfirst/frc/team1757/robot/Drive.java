@@ -44,9 +44,10 @@ public class Drive {
 		rightTeamInverted.setInverted(true);
 		
 		gyrometer = new ADXRS450_Gyro();
+		gyrometer.reset();
 
-		pidTeam = new CANTeamDrive(new CANSpeedController[] {leftTeam,rightTeamInverted});
-		pidController = new PIDController(0.0, .04, 0.0, 0.0, 0.0, gyrometer, pidTeam);
+		pidTeam = new CANTeamDrive(new CANSpeedController[] {leftTeam, rightTeamInverted});
+		pidController = new PIDController(driveSpeed, .04, 0.0, 0.0, 0.0, gyrometer, pidTeam);
 		
 		drive = new RobotDrive(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
 	}
@@ -101,9 +102,10 @@ public class Drive {
 	public void doAutoDrive(double speed, double time) {
 		setpoint = 0;
 		double _currentTime = Timer.getFPGATimestamp();
-		while (Timer.getFPGATimestamp() < _currentTime + time) {
+		while (Timer.getFPGATimestamp() < (_currentTime + time)) {
 			pidController.setDrive(speed);
 		}
+		System.out.println("doing AutoDrive");
 	}
 
 	
@@ -112,7 +114,8 @@ public class Drive {
 		case ArcadeDrive: doArcadeDrive(gamepad); break;
 		case TankDrive: doTankDrive(gamepad); break;
 		case PIDArcadeDrive: doPIDDrive(gamepad); break;
-		default: System.out.println("Drive type selected");
+		//case AutonomousDrive: doAutoDrive(); break;
+		default: System.out.println("Drive type not selected");
 			break; 
 		}
 	}
