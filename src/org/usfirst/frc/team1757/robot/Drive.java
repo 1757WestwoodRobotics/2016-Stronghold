@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1757.robot.Constants;
@@ -37,6 +38,12 @@ public class Drive {
 		backLeftMotor = new CANTalon(1);
 		frontRightMotor = new CANTalon(2);
 		backRightMotor = new CANTalon(3);
+		
+		frontLeftMotor.changeControlMode(TalonControlMode.PercentVbus);
+		backLeftMotor.changeControlMode(TalonControlMode.Follower);
+		frontRightMotor.changeControlMode(TalonControlMode.PercentVbus);
+		backRightMotor.changeControlMode(TalonControlMode.Follower);
+		
 		
 		leftTeam = new CANTeamDrive(new CANTalon[] {frontLeftMotor, backLeftMotor});
 		rightTeam = new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
