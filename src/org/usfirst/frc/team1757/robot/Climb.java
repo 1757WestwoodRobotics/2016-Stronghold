@@ -18,7 +18,7 @@ public class Climb {
 	double climbSpeed;
 	boolean isClimbing;
 
-	CANTalon talon5;
+	static CANTalon talon5;
 
 	public Climb(double climbSpeed, boolean isClimbing) {
 		this.climbSpeed = climbSpeed;

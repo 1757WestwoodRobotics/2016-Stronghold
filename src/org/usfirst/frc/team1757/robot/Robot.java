@@ -22,7 +22,6 @@ public class Robot extends IterativeRobot {
 	boolean isRunning;
 	
 	Joystick gamepad;
-	
 	Winch winch; 
 	Breach breach;
 	Climb climb;
@@ -38,9 +37,9 @@ public class Robot extends IterativeRobot {
 		winch = new Winch(0.0, false, Winch.winchTypes.DirectWinch);
 		breach = new Breach(0.0, false);
 		climb = new Climb(0.0, false);
-		drive = new Drive(0.0, false, Drive.driveTypes.ArcadeDrive);
+		drive = new Drive(0.0, false, Drive.driveTypes.SimpleDrive);
 		
-		Constants.setConstants(Constants.GamepadTypes.Xbox360);
+		Constants.setConstants(Constants.GamepadTypes.Logitech_DualAction);
 	}
 
 	public void autonomousInit() {
@@ -62,7 +61,8 @@ public class Robot extends IterativeRobot {
 	 * This function is called 
 	 */
 	public void teleopInit() {
-		drive.setDriveType(Drive.driveTypes.ArcadeDrive);
+		isRunning = true;
+		drive.setDriveType(Drive.driveTypes.SimpleDrive);
 	}
 	/**
 	 * This function is called periodically during operator control

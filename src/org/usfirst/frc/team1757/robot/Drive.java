@@ -46,12 +46,12 @@ public class Drive {
 		frontRightMotor.changeControlMode(TalonControlMode.PercentVbus);
 		backRightMotor.changeControlMode(TalonControlMode.Follower);
 		
-		/*
+		
 		leftTeam = new CANTeamDrive(new CANTalon[] {frontLeftMotor, backLeftMotor});
 		rightTeam = new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
 		rightTeamInverted = new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
 		rightTeamInverted.setInverted(true);
-		*/
+		
 		
 		gyrometer = new ADXRS450_Gyro();
 		gyrometer.reset();
@@ -63,7 +63,7 @@ public class Drive {
 	}
 
 	public enum driveTypes {
-		ArcadeDrive, TankDrive, PIDArcadeDrive, AutonomousDrive;
+		ArcadeDrive, TankDrive, PIDArcadeDrive, SimpleDrive, AutonomousDrive;
 	}
 	
 	public void setDriveType(driveTypes driveType) {
@@ -88,6 +88,13 @@ public class Drive {
 	
 	public void doArcadeDrive(Joystick gamepad) {
 		drive.arcadeDrive(gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY, gamepad.getRawAxis(Constants.AXIS_X)*Constants.SENSITIVITY);
+	}
+	
+	public void doSimpleDrive(Joystick gamepad) {
+		frontLeftMotor.set(gamepad.getY());
+		backLeftMotor.set(gamepad.getY());
+		frontRightMotor.set(-gamepad.getY());
+		backRightMotor.set(-gamepad.getY());
 	}
 	
 	public void doPIDArcadeDrive(Joystick gamepad) {
@@ -130,6 +137,9 @@ public class Drive {
 			break;
 		case PIDArcadeDrive: 
 			doPIDArcadeDrive(gamepad); 
+			break;
+		case SimpleDrive:
+			doSimpleDrive(gamepad);
 			break;
 		default: System.out.println("Drive type not selected");
 			break; 

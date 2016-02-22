@@ -69,12 +69,12 @@ public class Winch {
 	
 	public void doWinch(Joystick gamepad) {
 		
-		if (gamepad.getRawButton(Constants.BUTTON_LT)) {
+		if (gamepad.getRawButton(Constants.BUTTON_BACK)) {
 			winch.changeOutput(-.01);
 			System.out.println("Decrementing winchSpeed...");
 			Timer.delay(0.1);
 			Math.max(-1, winchSpeed);
-		} else if (gamepad.getRawButton(Constants.BUTTON_RT)) {
+		} else if (gamepad.getRawButton(Constants.BUTTON_START)) {
 			winch.changeOutput(.01);
 			System.out.println("Incrementing winchSpeed...");
 			Timer.delay(0.1);

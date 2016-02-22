@@ -33,13 +33,15 @@ public class Breach {
 		//SmartDashboard.putNumber("Breach-motorCurrent", talon4.getOutputCurrent());
 	}
 	
+	
+	//TODO This is hardcoded for the LogitechDualAction
 	public void doBreach(Joystick gamepad) {
-		if (gamepad.getRawButton(Constants.BUTTON_BACK)) {
+		if (gamepad.getRawButton(Constants.BUTTON_RT)) {
 			breachSpeed -= 0.01;
 			System.out.println("Decrementing breachSpeed...");
 			Timer.delay(0.1);
 			breachSpeed = Math.max(-1, breachSpeed);
-		} else if (gamepad.getRawButton(Constants.BUTTON_START)) {
+		} else if (gamepad.getRawButton(Constants.BUTTON_LT)) {
 			breachSpeed += 0.01;
 			System.out.println("Incrementing breachSpeed...");
 			Timer.delay(0.1);
