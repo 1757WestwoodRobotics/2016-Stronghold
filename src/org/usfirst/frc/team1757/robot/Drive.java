@@ -39,16 +39,19 @@ public class Drive {
 		frontRightMotor = new CANTalon(2);
 		backRightMotor = new CANTalon(3);
 		
+		
+		//TODO Figure out inversion with this
 		frontLeftMotor.changeControlMode(TalonControlMode.PercentVbus);
 		backLeftMotor.changeControlMode(TalonControlMode.Follower);
 		frontRightMotor.changeControlMode(TalonControlMode.PercentVbus);
 		backRightMotor.changeControlMode(TalonControlMode.Follower);
 		
-		
+		/*
 		leftTeam = new CANTeamDrive(new CANTalon[] {frontLeftMotor, backLeftMotor});
 		rightTeam = new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
 		rightTeamInverted = new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
 		rightTeamInverted.setInverted(true);
+		*/
 		
 		gyrometer = new ADXRS450_Gyro();
 		gyrometer.reset();
