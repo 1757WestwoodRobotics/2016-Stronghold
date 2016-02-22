@@ -4,7 +4,11 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.CANSpeedController;
 
-//I am not a wrapper - Abraham Nixon
+/**
+ * 
+ * @author loading
+ *
+ */
 
 public abstract class WinchBase {
 	private CANTeamDrive m_motorOut;
@@ -12,18 +16,8 @@ public abstract class WinchBase {
 	private boolean m_isRunning;
     private ArrayList<Double> m_readings;
     
-    public WinchBase(CANSpeedController motor) {
-    	setM_motorOut(new CANTeamDrive(new CANSpeedController[] {motor}));
-		setM_output(0);
-		setM_isRunning(false);
-		setM_readings(new ArrayList<>());
-    }
-	public WinchBase(CANSpeedController motorLeft, CANSpeedController motorRight) {
-		setM_motorOut(new CANTeamDrive(new CANSpeedController[] {motorLeft, motorRight}));
-		setM_output(0);
-		setM_isRunning(false);
-		setM_readings(new ArrayList<>());
-	}	
+    public WinchBase(CANSpeedController motor) {}
+	public WinchBase(CANSpeedController motorLeft, CANSpeedController motorRight) {}	
 	
 	public abstract void setOutput(double Output);
 	

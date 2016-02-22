@@ -35,8 +35,6 @@ import edu.wpi.first.wpilibj.util.BoundaryException;
  * An interface for controllers. Controllers run control loops, the most command
  * are PID controllers and there variants, but this includes anything that is
  * controlling an actuator in a separate thread.
- *
- * @author alex
  */
 interface Controller {
   /**
@@ -371,8 +369,8 @@ private boolean m_usingPercentTolerance;
       }
     }
   }
-  public void setInverted(boolean fuck){
-	  m_invert = fuck;
+  public void setInverted(boolean inverted){
+	  m_invert = inverted;
   }
   public void setDrive(double speed){
 	  m_drive = speed;

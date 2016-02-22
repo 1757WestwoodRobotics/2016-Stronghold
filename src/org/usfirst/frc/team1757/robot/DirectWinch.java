@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj.CANSpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * 
+ * @author loading
+ *
+ */
+
 public class DirectWinch extends WinchBase {
 	private CANTeamDrive m_motorOut;
 	private double m_output;
@@ -37,6 +43,8 @@ public class DirectWinch extends WinchBase {
 			m_motorOut.set(m_output);
 			recordData();
 		}
+		else
+			System.out.println("Winch is not enabled");
 	}
 
 	public void setOutput(double Output) {

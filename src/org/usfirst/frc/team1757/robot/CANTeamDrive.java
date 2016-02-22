@@ -1,14 +1,16 @@
 package org.usfirst.frc.team1757.robot;
 
-import java.util.Enumeration;
 import java.util.Vector;
 import edu.wpi.first.wpilibj.CANSpeedController;
 import edu.wpi.first.wpilibj.tables.ITable;
+/**
+ * 
+ * @author loading
+ *
+ */
 
 public class CANTeamDrive implements CANSpeedController {
 	private Vector<CANSpeedController> motorControllers;
-    private float sign = 1.0f;
-    private int teamSize;
     
     /** 
      * Structure: takes an array of CANSpeedControllers as constructor argument and puts them in a vector
@@ -21,40 +23,46 @@ public class CANTeamDrive implements CANSpeedController {
      * */
     public CANTeamDrive(final CANSpeedController[] controllerArray) {
         motorControllers = new Vector<CANSpeedController>(controllerArray.length);
-        for (int i = 0; i < controllerArray.length; i++) {
-            motorControllers.addElement(controllerArray[i]);
-            teamSize = i;
+        for (CANSpeedController controller:controllerArray) {
+            motorControllers.addElement(controller);
         }
     }
     
     /**
-     * Setter function for the sign coefficient
+     * Implements setInverted method for each element of the CANSpeedController array
      */
     public void setInverted(final boolean doInvert) {
-        if (doInvert) {
-            sign = -1.0f;
-        } else {
-            sign = 1.0f;
-        }
+    	for (CANSpeedController controller:motorControllers) {
+    		controller.setInverted(doInvert);
+    	}
+    }
+
+    /**
+     * @param Index of CANSpeedController in CANSpeedController Team
+     * @return get() value for index element in the CANSpeedController Team - value variable on the CANSpeedController controlmode
+     */
+    public double get(int index) {
+    	return motorControllers.get(index).get();
     }
     
     /**
-     * Each of the CANSpeedControllers in the vector should be the same, so we'll use the first one
-     * Outputs the speed value of this CANSpeedController -1 to 1
-	 */
+     * @return Average get() value for all elements in the CANSpeedController Team - value variable on the CANSpeedController controlmode
+     */
     public double get() {
-        final CANSpeedController controller = (CANSpeedController) motorControllers.firstElement();
-        return sign * controller.get();
+        double sum = 0, count = 0;
+    	for (CANSpeedController controller:motorControllers) {
+    		sum += controller.get();
+    		count++;
+    	}
+    	return sum/count;
     }
     
     /**
      * Sets the value of each CANSpeedController to the given double value
      */
-    public void set(double value) {
-        final Enumeration<CANSpeedController> controllers = motorControllers.elements();
-        while (controllers.hasMoreElements()) { 
-            final CANSpeedController controller = (CANSpeedController) controllers.nextElement();
-            controller.set(sign * value);
+    public void set(double speed) {
+        for (CANSpeedController controller:motorControllers) {
+        	controller.set(speed);
         }
     }
     
@@ -62,34 +70,26 @@ public class CANTeamDrive implements CANSpeedController {
      * Disables motor group
      */
     public void disable() {
-    	final Enumeration<CANSpeedController> controllers = motorControllers.elements(); 
-    	while (controllers.hasMoreElements()) { //Must be traversed similar to an iterator
-            final CANSpeedController controller = (CANSpeedController) controllers.nextElement();
-            controller.disable();
+        for (CANSpeedController controller:motorControllers) {
+        	controller.disable();
         }
     }
     
     /**
-     * Sets the value of each CANSpeedController to the given double value
-     * Must be traversed similar to an iterator
+     * 
      */
-    public void set(double value, byte syncGroup){ 
-        final Enumeration<CANSpeedController> controllers = motorControllers.elements();
-        while (controllers.hasMoreElements()) {
-            final CANSpeedController controller = (CANSpeedController) controllers.nextElement();
-            controller.set(sign * value);
+    public void set(double speed, byte syncGroup){ 
+        for (CANSpeedController controller:motorControllers) {
+        	controller.set(speed, syncGroup);
         }
     }
     
     /**
-     * Sets the value of each CANSpeedController to the given double value
-     * Enum must be traversed similar to an iterator
+     * 
      */
 	public void pidWrite(double output) {
-        final Enumeration<CANSpeedController> controllers = motorControllers.elements();
-        while (controllers.hasMoreElements()) {
-            final CANSpeedController controller = (CANSpeedController) controllers.nextElement();
-            controller.pidWrite(sign * output);
+        for (CANSpeedController controller:motorControllers) {
+        	controller.pidWrite(output);
         }
 	}
 	
@@ -99,221 +99,239 @@ public class CANTeamDrive implements CANSpeedController {
 	 * @return CANSpeedController object instance
 	 */
 	public CANSpeedController getController(int index)	{
-		int i = 0;
-        final Enumeration<CANSpeedController> controllers = motorControllers.elements();
-        CANSpeedController controller = null; //Janky null instantiation
-        while (controllers.hasMoreElements() && (i < index)) {
-            controller = (CANSpeedController) controllers.nextElement();
-            ++index;
-        }
-        return controller;
+		return motorControllers.get(index);
 	}
 	
 	/**
 	 * @return Integer size of the motor team
 	 */
 	public int getTeamSize() {
-		return teamSize + 1;
+		return motorControllers.size();
 	}
 
 	/**
-	 * @param
-	 * @return Returns boolean value whether or not the teams are inverted
+	 * @return getInverted() value for the first element of CANSpeedController Team
 	 */
 	public boolean getInverted() {
-		if (sign > 0)
-			return true;
-		else
-			return false;
+		return motorControllers.firstElement().getInverted();
 	}
-
-	@Override
+	
 	public void setPID(double p, double i, double d) {
-		// TODO Auto-generated method stub
-		
+		for (CANSpeedController controller:motorControllers) {
+			controller.setPID(p, i, d);
+		}
 	}
 
 	@Override
 	public double getP() {
-		// TODO Auto-generated method stub
-		return 0;
+		return motorControllers.firstElement().getP();
 	}
 
 	@Override
 	public double getI() {
-		// TODO Auto-generated method stub
-		return 0;
+		return motorControllers.firstElement().getI();
 	}
 
 	@Override
 	public double getD() {
-		// TODO Auto-generated method stub
-		return 0;
+		return motorControllers.firstElement().getD();
 	}
 
 	@Override
 	public void setSetpoint(double setpoint) {
-		// TODO Auto-generated method stub
-		
+		for(CANSpeedController controller:motorControllers) {
+			controller.setSetpoint(setpoint);
+		}
 	}
 
 	@Override
 	public double getSetpoint() {
-		// TODO Auto-generated method stub
-		return 0;
+		return motorControllers.firstElement().getSetpoint();
 	}
 
 	@Override
 	public double getError() {
-		// TODO Auto-generated method stub
-		return 0;
+		return motorControllers.firstElement().getError();
 	}
 
 	@Override
 	public void enable() {
-        final Enumeration<CANSpeedController> controllers = motorControllers.elements();
-        while (controllers.hasMoreElements()) { 
-            final CANSpeedController controller = (CANSpeedController) controllers.nextElement();
-            controller.enable();
-        }
+		for(CANSpeedController controller:motorControllers) {
+			controller.enable();
+		}
 	}
 
 	@Override
 	public boolean isEnabled() {
-        final CANSpeedController controller = (CANSpeedController) motorControllers.firstElement();
-        return controller.isEnabled();
+		return motorControllers.firstElement().isEnabled();
 	}
 
 	@Override
 	public void reset() {
-        final Enumeration<CANSpeedController> controllers = motorControllers.elements();
-        while (controllers.hasMoreElements()) { 
-            final CANSpeedController controller = (CANSpeedController) controllers.nextElement();
-            controller.reset();
-        }
-		
+		for(CANSpeedController controller:motorControllers) {
+			controller.reset();
+		}
 	}
 
 	@Override
 	public void updateTable() {
-		// TODO Auto-generated method stub
-		
+		for(CANSpeedController controller:motorControllers) {
+			controller.updateTable();
+		}
 	}
 
 	@Override
 	public void startLiveWindowMode() {
-		// TODO Auto-generated method stub
-		
+		for(CANSpeedController controller:motorControllers) {
+			controller.startLiveWindowMode();
+		}
 	}
 
 	@Override
 	public void stopLiveWindowMode() {
-		// TODO Auto-generated method stub
-		
+		for(CANSpeedController controller:motorControllers) {
+			controller.stopLiveWindowMode();
+		}
 	}
 
 	@Override
 	public void initTable(ITable subtable) {
-		// TODO Auto-generated method stub
-		
+		for(CANSpeedController controller:motorControllers) {
+			controller.initTable(subtable);
+		}
 	}
 
 	@Override
 	public ITable getTable() {
-		// TODO Auto-generated method stub
-		return null;
+		return motorControllers.firstElement().getTable();
 	}
 
 	@Override
 	public String getSmartDashboardType() {
-		// TODO Auto-generated method stub
-		return null;
+		return motorControllers.firstElement().getSmartDashboardType();
 	}
 
 	@Override
 	public ControlMode getControlMode() {
-        final CANSpeedController controller = (CANSpeedController) motorControllers.firstElement();
-        return controller.getControlMode();
+		return motorControllers.firstElement().getControlMode();
 	}
 
 	@Override
 	public void setControlMode(int mode) {
-        final Enumeration<CANSpeedController> controllers = motorControllers.elements();
-        while (controllers.hasMoreElements()) { 
-            final CANSpeedController controller = (CANSpeedController) controllers.nextElement();
-            controller.setControlMode(mode);
-        }
+		for(CANSpeedController controller:motorControllers) {
+			controller.setControlMode(mode);
+		}
 	}
 
 	@Override
 	public void setP(double p) {
-		// TODO Auto-generated method stub
-		
+		for(CANSpeedController controller:motorControllers) {
+			controller.setP(p);
+		}
 	}
 
 	@Override
 	public void setI(double i) {
-		// TODO Auto-generated method stub
-		
+		for(CANSpeedController controller:motorControllers) {
+			controller.setI(i);
+		}
 	}
 
 	@Override
 	public void setD(double d) {
-		// TODO Auto-generated method stub
-		
+		for(CANSpeedController controller:motorControllers) {
+			controller.setD(d);
+		}
 	}
 
-	@Override
-	public double getBusVoltage() {
-        final CANSpeedController controller = (CANSpeedController) motorControllers.firstElement();
-        return controller.getBusVoltage();
-	}
+    public double getBusVoltage(int index) {
+    	return motorControllers.get(index).getBusVoltage();
+    }
+    
+    public double getBusVoltage() {
+        double sum = 0, count = 0;
+    	for (CANSpeedController controller:motorControllers) {
+    		sum += controller.getBusVoltage();
+    		count++;
+    	}
+    	return sum/count;
+    }
 
-	@Override
-	public double getOutputVoltage() {
-        final CANSpeedController controller = (CANSpeedController) motorControllers.firstElement();
-        return controller.getOutputVoltage();
-	}
+    public double getOutputVoltage(int index) {
+    	return motorControllers.get(index).getOutputVoltage();
+    }
+    
+    public double getOutputVoltage() {
+        double sum = 0, count = 0;
+    	for (CANSpeedController controller:motorControllers) {
+    		sum += controller.getOutputVoltage();
+    		count++;
+    	}
+    	return sum/count;
+    }
 
-	@Override
-	public double getOutputCurrent() {
-        double sum = 0;
-        for (CANSpeedController controller: motorControllers) {
-        	sum += controller.getOutputCurrent();
-        }
-        return sum/teamSize;
+    public double getOutputCurrent(int index) {
+    	return motorControllers.get(index).getOutputCurrent();
+    }
+    
+    public double getOutputCurrent() {
+        double sum = 0, count = 0;
+    	for (CANSpeedController controller:motorControllers) {
+    		sum += controller.getOutputCurrent();
+    		count++;
+    	}
+    	return sum/count;
+    }
+
+    public double getTemperature(int index) {
+    	return motorControllers.get(index).getTemperature();
+    }
+    
+    public double getTemperature() {
+        double sum = 0, count = 0;
+    	for (CANSpeedController controller:motorControllers) {
+    		sum += controller.getTemperature();
+    		count++;
+    	}
+    	return sum/count;
+    }
+	
+    public double getPosition(int index) {
+    	return motorControllers.get(index).getPosition();
+    }
+    
+    public double getPosition() {
+        double sum = 0, count = 0;
+    	for (CANSpeedController controller:motorControllers) {
+    		sum += controller.getPosition();
+    		count++;
+    	}
+    	return sum/count;
+    }
+	
+    public double getSpeed(int index) {
+    	return motorControllers.get(index).getSpeed();
+    }
+    
+    public double getSpeed() {
+        double sum = 0, count = 0;
+    	for (CANSpeedController controller:motorControllers) {
+    		sum += controller.getSpeed();
+    		count++;
+    	}
+    	return sum/count;
+    }
+	
+    public void setVoltageRampRate(double rampRate) {
+		for(CANSpeedController controller:motorControllers) {
+			controller.setVoltageRampRate(rampRate);
+		}
     }
 
 	@Override
-	public double getTemperature() {
-        final CANSpeedController controller = (CANSpeedController) motorControllers.firstElement();
-        return controller.getTemperature();
-	}
-
-	@Override
-	public double getPosition() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double getSpeed() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setVoltageRampRate(double rampRate) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void stopMotor() {
-        final Enumeration<CANSpeedController> controllers = motorControllers.elements();
-        while (controllers.hasMoreElements()) { 
-            final CANSpeedController controller = (CANSpeedController) controllers.nextElement();
-            controller.stopMotor();
-        }
+		for(CANSpeedController controller:motorControllers) {
+			controller.stopMotor();
+		}
 	}
 }

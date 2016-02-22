@@ -8,6 +8,12 @@ import edu.wpi.first.wpilibj.CANSpeedController;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * 
+ * @author loading
+ *
+ */
+
 public class PIDWinch extends WinchBase {
 	private CANTeamDrive m_pidOutput;
 	private PIDSource m_pidSource;
@@ -125,6 +131,8 @@ public class PIDWinch extends WinchBase {
 			m_PIDController.setSetpoint(m_output);
 			recordData();
 		}
+		else
+			System.out.println("Winch is not enabled");
 	}
 
 	@Override

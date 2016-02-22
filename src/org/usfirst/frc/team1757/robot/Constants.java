@@ -1,4 +1,9 @@
 package org.usfirst.frc.team1757.robot;
+/**
+ * 
+ * @author loading
+ *
+ */
 
 public class Constants {
 	private Constants(){}
@@ -12,6 +17,8 @@ public class Constants {
 	BUTTON_LB, BUTTON_RB, BUTTON_LT, BUTTON_RT, 
 	BUTTON_BACK, BUTTON_START, BUTTON_LS, BUTTON_RS,
 	AXIS_X, AXIS_Y, AXIS_RSX, AXIS_RSY;
+	
+	//Note that an index of -1 on any Gamepad variable means that the button does not exist in hardware and should not be referenced
 	
 	public enum GamepadTypes {
 		Logitech_DualAction, Logitech_F310, Xbox360, Gamecube
@@ -80,14 +87,14 @@ public class Constants {
 			BUTTON_B = Constants.Gamepad_Gamecube.BUTTON_B;
 			BUTTON_X = Constants.Gamepad_Gamecube.BUTTON_X;
 			BUTTON_Y = Constants.Gamepad_Gamecube.BUTTON_Y;
-			//BUTTON_LB = Constants.Gamepad_Gamecube.BUTTON_LB;
-			//BUTTON_RB = Constants.Gamepad_Gamecube.BUTTON_RB;
+			BUTTON_LB = Constants.Gamepad_Gamecube.BUTTON_LB;
+			BUTTON_RB = Constants.Gamepad_Gamecube.BUTTON_RB;
 			BUTTON_LT = Constants.Gamepad_Gamecube.BUTTON_LT;
 			BUTTON_RT = Constants.Gamepad_Gamecube.BUTTON_RT;
-			//BUTTON_BACK = Constants.Gamepad_Gamecube.BUTTON_BACK;
+			BUTTON_BACK = Constants.Gamepad_Gamecube.BUTTON_BACK;
 			BUTTON_START = Constants.Gamepad_Gamecube.BUTTON_START;
-			//BUTTON_LS = Constants.Gamepad_Gamecube.BUTTON_LS;
-			//BUTTON_RS = Constants.Gamepad_Gamecube.BUTTON_RS;
+			BUTTON_LS = Constants.Gamepad_Gamecube.BUTTON_LS;
+			BUTTON_RS = Constants.Gamepad_Gamecube.BUTTON_RS;
 			AXIS_X = Constants.Gamepad_Gamecube.AXIS_X;
 			AXIS_Y = Constants.Gamepad_Gamecube.AXIS_Y;
 			AXIS_RSX = Constants.Gamepad_Gamecube.AXIS_RSX;
@@ -169,7 +176,7 @@ public class Constants {
 		private Gamepad_LogitechDual(){}
 		
 		public static final int PORT = 0;
-		public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.4f;
+		public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.8f;
 		public static final String MODE = "DUALACTION";
 				
 		public static final int 
@@ -184,13 +191,15 @@ public class Constants {
 		private Gamepad_Gamecube() {}
 		
 		public static final int PORT = 1;
-		public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.4f;
+		public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.8f;
 		public static final String MODE = "GAMECUBE";
 		
 		public static final int
     	BUTTON_A = 2, BUTTON_B = 3, BUTTON_X = 1,
     	BUTTON_Y = 4, BUTTON_Z = 8,
     	BUTTON_RT = 6, BUTTON_LT = 5, BUTTON_START = 10,
+    	BUTTON_BACK = -1, BUTTON_LB = -1, BUTTON_RB = -1, 
+    	BUTTON_LS = -1, BUTTON_RS = -1,
     	AXIS_X = 0, AXIS_Y = 1, AXIS_RSX = 5, AXIS_RSY = 2,
     	AXIS_LT = 3, AXIS_RT = 4;
 	}
@@ -198,7 +207,7 @@ public class Constants {
 	public static final class Gamepad_LogitechF310 {
 		private Gamepad_LogitechF310(){}
         public static final int PORT = 1;
-        public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.4f;
+        public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.8f;
         public static final String MODE = "F310";
 
     	// Constant variables for the button codes on the F310 gamepad
@@ -230,7 +239,7 @@ public class Constants {
 		private Gamepad_Xbox360() {}
 		
 		public static final int PORT = 1;
-		public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.4f;
+		public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.8f;
 		public static final String MODE = "Xbox360";
 		
 		public static final int
@@ -247,7 +256,7 @@ public class Constants {
         private Logitech_ATK3(){}
         public static final int PORT = 2;
         public static final float 
-        DEADZONE = 0.08f, SENSITIVITY = 0.4f;
+        DEADZONE = 0.08f, SENSITIVITY = 0.8f;
         
         public static final int
         BUTTON_TRIGGER = 1, AXIS_X = 0, AXIS_Y = 1;

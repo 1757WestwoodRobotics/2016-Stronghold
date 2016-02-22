@@ -4,6 +4,12 @@ import java.util.Enumeration;
 import java.util.Vector;
 import edu.wpi.first.wpilibj.SpeedController;
 
+/**
+ * 
+ * @author loading
+ *
+ */
+
 public class TeamDrive implements SpeedController {
 	private Vector<SpeedController> motorControllers;
     private float sign = 1.0f;

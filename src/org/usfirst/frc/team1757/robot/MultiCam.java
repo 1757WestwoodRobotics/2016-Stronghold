@@ -12,6 +12,12 @@ import com.ni.vision.NIVision.Image;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
+/**
+ * 
+ * @author loading
+ *
+ */
+
 public class MultiCam {
 	/**
 	 * The image to push to the CameraServer

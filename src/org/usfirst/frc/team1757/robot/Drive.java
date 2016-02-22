@@ -80,7 +80,7 @@ public class Drive {
 		drive.arcadeDrive(gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY, gamepad.getRawAxis(Constants.AXIS_X)*Constants.SENSITIVITY);
 	}
 	
-	public void doPIDDrive(Joystick gamepad) {
+	public void doPIDArcadeDrive(Joystick gamepad) {
 		pidController.setDrive(gamepad.getY()*Constants.SENSITIVITY);
 		
 		if (gamepad.getRawButton(Constants.Gamepad_LogitechDual.BUTTON_B)) {
@@ -88,6 +88,7 @@ public class Drive {
 			driveType = driveTypes.ArcadeDrive;
 		}
 		
+		//TODO Utilize wrapper implementation of deadzone
 		if (gamepad.getRawAxis(Constants.AXIS_Y) > .1) {
 			setpoint += gamepad.getRawAxis(3)*Constants.PID_.turnConstant;
 			pidController.setSetpoint(setpoint);
@@ -111,10 +112,15 @@ public class Drive {
 	
 	public void doDrive(Joystick gamepad) {
 		switch (driveType) {
-		case ArcadeDrive: doArcadeDrive(gamepad); break;
-		case TankDrive: doTankDrive(gamepad); break;
-		case PIDArcadeDrive: doPIDDrive(gamepad); break;
-		//case AutonomousDrive: doAutoDrive(); break;
+		case ArcadeDrive: 
+			doArcadeDrive(gamepad); 
+			break;
+		case TankDrive: 
+			doTankDrive(gamepad); 
+			break;
+		case PIDArcadeDrive: 
+			doPIDArcadeDrive(gamepad); 
+			break;
 		default: System.out.println("Drive type not selected");
 			break; 
 		}
