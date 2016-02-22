@@ -1,9 +1,11 @@
 package org.usfirst.frc.team1757.robot;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CANSpeedController;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1757.robot.Constants;
@@ -22,13 +24,14 @@ public class Drive {
     double setpoint, initialTurn;
     
     driveTypes driveType;
+    ADXRS450_Gyro gyrometer;
 	
-	public Drive(double driveSpeed, boolean isDriving) {
+	public Drive(double driveSpeed, boolean isDriving, driveTypes driveType) {
 		this.driveSpeed = driveSpeed;
 		this.isDriving = isDriving;
 		setpoint = 0.0;
 		initialTurn = 10;
-		driveType = driveTypes.ArcadeDrive;
+		this.driveType = driveType;
 		
 		frontLeftMotor = new CANTalon(0);
 		backLeftMotor = new CANTalon(1);
@@ -40,25 +43,32 @@ public class Drive {
 		rightTeamInverted = new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
 		rightTeamInverted.setInverted(true);
 		
+		gyrometer = new ADXRS450_Gyro();
+
 		pidTeam = new CANTeamDrive(new CANSpeedController[] {leftTeam,rightTeamInverted});
+		pidController = new PIDController(0.0, .04, 0.0, 0.0, 0.0, gyrometer, pidTeam);
 		
 		drive = new RobotDrive(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor);
 	}
-	
+
 	public enum driveTypes {
-		ArcadeDrive, TankDrive, PIDArcadeDrive;
+		ArcadeDrive, TankDrive, PIDArcadeDrive, AutonomousDrive;
+	}
+	
+	public void setDriveType(driveTypes driveType) {
+		this.driveType = driveType;
 	}
 
 	public void printDriveMessages(Joystick gamepad) {
 		SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(Constants.AXIS_Y)*0.5);
 		SmartDashboard.putNumber("Right Axis", gamepad.getRawAxis(Constants.AXIS_RSY)*0.5);
 		SmartDashboard.putBoolean("isDriving?", isDriving);
-		/*
-		SmartDashboard.putNumber("talon0-motorCurrent", talon0.getOutputCurrent());
+	
+		/*SmartDashboard.putNumber("talon0-motorCurrent", talon0.getOutputCurrent());
 		SmartDashboard.putNumber("talon1-motorCurrent", talon1.getOutputCurrent());
 		SmartDashboard.putNumber("talon2-motorCurrent", talon2.getOutputCurrent());
-		SmartDashboard.putNumber("talon3-motorCurrent", talon3.getOutputCurrent());
-		*/
+		SmartDashboard.putNumber("talon3-motorCurrent", talon3.getOutputCurrent());*/
+	
 	}
 
 	public void doTankDrive(Joystick gamepad) {
@@ -88,17 +98,22 @@ public class Drive {
 		}
 	}
 	
+	public void doAutoDrive(double speed, double time) {
+		setpoint = 0;
+		double _currentTime = Timer.getFPGATimestamp();
+		while (Timer.getFPGATimestamp() < _currentTime + time) {
+			pidController.setDrive(speed);
+		}
+	}
+
+	
 	public void doDrive(Joystick gamepad) {
-		if (driveType == driveTypes.ArcadeDrive) {
-			doArcadeDrive(gamepad);
-		}
-		
-		if (driveType == driveTypes.TankDrive) {
-			doTankDrive(gamepad);
-		}
-		
-		if (driveType == driveTypes.PIDArcadeDrive) {
-			doPIDDrive(gamepad);
+		switch (driveType) {
+		case ArcadeDrive: doArcadeDrive(gamepad); break;
+		case TankDrive: doTankDrive(gamepad); break;
+		case PIDArcadeDrive: doPIDDrive(gamepad); break;
+		default: System.out.println("Drive type selected");
+			break; 
 		}
 	}
 }

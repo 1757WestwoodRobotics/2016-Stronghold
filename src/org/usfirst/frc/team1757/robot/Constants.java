@@ -107,8 +107,8 @@ public class Constants {
 			BUTTON_Y = Constants.Gamepad_Xbox360.BUTTON_Y;
 			BUTTON_LB = Constants.Gamepad_Xbox360.BUTTON_LB;
 			BUTTON_RB = Constants.Gamepad_Xbox360.BUTTON_RB;
-			//BUTTON_LT = Constants.Gamepad_Xbox360.BUTTON_LT;
-			//BUTTON_RT = Constants.Gamepad_Xbox360.BUTTON_RT;
+			BUTTON_LT = Constants.Gamepad_Xbox360.AXIS_LT;
+			BUTTON_RT = Constants.Gamepad_Xbox360.AXIS_RT;
 			BUTTON_BACK = Constants.Gamepad_Xbox360.BUTTON_BACK;
 			BUTTON_START = Constants.Gamepad_Xbox360.BUTTON_START;
 			BUTTON_LS = Constants.Gamepad_Xbox360.BUTTON_LS;
@@ -236,8 +236,8 @@ public class Constants {
 		public static final int
     	BUTTON_A = 1, BUTTON_B = 2, BUTTON_X = 3,
     	BUTTON_Y = 4, BUTTON_LB = 5, BUTTON_RB = 6,
-    	BUTTON_START = 10, BUTTON_BACK = 9, 
-    	BUTTON_LS = 11, BUTTON_RS = 12, 
+    	BUTTON_START = 8, BUTTON_BACK = 7, 
+    	BUTTON_LS = 9, BUTTON_RS = 10, 
     	AXIS_X = 0, AXIS_Y = 1, AXIS_RSX = 2, AXIS_RSY = 5,
     	AXIS_LT = 2, AXIS_RT = 3;
 	}

@@ -4,7 +4,6 @@ package org.usfirst.frc.team1757.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
-//import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -19,11 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-
-	//final String defaultAuto = "Default";
-	//final String customAuto = "My Auto";
-	//String autoSelected;
-	//SendableChooser chooser;
 
 	boolean isRunning;
 	
@@ -40,23 +34,19 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 		isRunning = false;
-		//TODO: FIX the fucking constructors
+		//TODO: FIX the abusive captains
 		gamepad = new Joystick(0);
 		winch = new Winch(0.0, false);
 		breach = new Breach(0.0, false);
 		climb = new Climb(0.0, false);
-		drive = new Drive(0.0, false);
+		drive = new Drive(0.0, false, Drive.driveTypes.ArcadeDrive);
 		
-		Constants.setConstants(Constants.GamepadTypes.Logitech_DualAction);
-		/*chooser = new SendableChooser();
-		chooser.addDefault("Default Auto", defaultAuto);
-		chooser.addObject("My Auto", customAuto);
-		SmartDashboard.putData("Auto choices", chooser); */
+		Constants.setConstants(Constants.GamepadTypes.Xbox360);
 	}
 
 
 	/**
-	 * This autonomous (along with the chooser code above) shows how to select between different autonomous modes
+	 * This autoDrive (along with the chooser code above) shows how to select between different autoDrive modes
 	 * using the dashboard. The sendable chooser code works with the Java SmartDashboard. If you prefer the LabVIEW
 	 * Dashboard, remove all of the chooser code and uncomment the getString line to get the auto name from the text box
 	 * below the Gyro
@@ -64,35 +54,31 @@ public class Robot extends IterativeRobot {
 	 * You can add additional auto modes by adding additional comparisons to the switch structure below with additional strings.
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
-	public void autonomousInit() {
-
-		//autoSelected = (String) chooser.getSelected();
-		//		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
-		//System.out.println("Auto selected: " + autoSelected);
+	public void autoDriveInit() {
+		System.out.println("AUTO mode has started.");
+		drive.setDriveType(Drive.driveTypes.AutonomousDrive);
 	}
 
 	/**
-	 * This function is called periodically during autonomous
+	 * This function is called periodically during autoDrive
 	 */
-	public void autonomousPeriodic() {
-
-		/* switch(autoSelected) {
-		case customAuto:
-			//Put custom auto code here   
-			break;
-		case defaultAuto:
-		default:
-			//Put default auto code here
-			break;
-		} */
+	public void autoDrivePeriodic() {
+		while(isEnabled() && isAutonomous()) {
+			Autonomous.executeAutonomous(Defenses.LOW_BAR, drive);
+		}
 	}
 
+	/**
+	 * This function is called 
+	 */
+	public void teleopInit() {
+		drive.setDriveType(Drive.driveTypes.ArcadeDrive);
+	}
 	/**
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
 		while(isEnabled() && isOperatorControl()) {
-
 			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
 
 			if (gamepad.getRawButton(Constants.BUTTON_A)) {
@@ -105,6 +91,16 @@ public class Robot extends IterativeRobot {
 				} else {
 					didStop();
 					System.out.println("Robot didStop()... Press 'A' to re-enable.");
+				}
+			}
+			
+			if (gamepad.getRawButton(Constants.BUTTON_LB)) {
+				if (drive.driveType == Drive.driveTypes.ArcadeDrive) {
+					drive.driveType = Drive.driveTypes.PIDArcadeDrive;
+				} else if (drive.driveType == Drive.driveTypes.PIDArcadeDrive) {
+					drive.driveType = Drive.driveTypes.ArcadeDrive;
+				} else {
+					drive.driveType = Drive.driveTypes.ArcadeDrive;
 				}
 			}
 			
@@ -126,6 +122,10 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
+	public void testInit() {
+		
+	}
+	
 	/**
 	 * This function is called periodically during test mode
 	 */
