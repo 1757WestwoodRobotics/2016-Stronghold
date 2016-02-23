@@ -239,7 +239,7 @@ public class Constants {
 		private Gamepad_Xbox360() {}
 		
 		public static final int PORT = 1;
-		public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.8f;
+		public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 1.0f;
 		public static final String MODE = "Xbox360";
 		
 		public static final int

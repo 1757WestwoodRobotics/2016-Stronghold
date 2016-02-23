@@ -19,8 +19,8 @@ public class Robot extends IterativeRobot {
 	edu.wpi.first.wpilibj.CANTalon talon;
 
 	//Winch winch; 
-	//Breach breach;
-	Climb climb;
+	Breach breach;
+	//Climb climb;
 	
 	Drive drive;
 	
@@ -36,8 +36,8 @@ public class Robot extends IterativeRobot {
 		talon = new edu.wpi.first.wpilibj.CANTalon(1);
 		
 		//winch = new Winch(0.0, false, Winch.winchTypes.DirectWinch);
-		//breach = new Breach(0.0, false);
-		climb = new Climb(0.0, false);
+		breach = new Breach(0.0, false);
+		//climb = new Climb(0.0, false);
 		
 		drive = new Drive(0.0, false, Drive.driveTypes.ArcadeDrive);
 		
@@ -88,7 +88,7 @@ public class Robot extends IterativeRobot {
 				}
 			} */
 			
-		/* 	if (gamepad.getRawButton(Constants.BUTTON_LB)) {
+			if (gamepad.getRawButton(Constants.BUTTON_B)) {
 				if (drive.driveType == Drive.driveTypes.ArcadeDrive) {
 					drive.driveType = Drive.driveTypes.PIDArcadeDrive;
 				} else if (drive.driveType == Drive.driveTypes.PIDArcadeDrive) {
@@ -96,16 +96,16 @@ public class Robot extends IterativeRobot {
 				} else {
 					drive.driveType = Drive.driveTypes.ArcadeDrive;
 				}
-			} */
+			}
 			
 			if (isRunning) {
 				drive.printDriveMessages(gamepad);
 				drive.doDrive(gamepad);
-				//breach.printBreachMessages(gamepad);
-				//breach.doBreach(gamepad);
+				breach.printBreachMessages(gamepad);
+				breach.doBreach(gamepad);
 				
-				climb.printClimbMessages(gamepad);
-				climb.doClimb(gamepad);
+				//climb.printClimbMessages(gamepad);
+				//climb.doClimb(gamepad);
 				
 				//winch.printWinchMessages(gamepad);
 				//winch.doWinch(gamepad);
@@ -137,15 +137,15 @@ public class Robot extends IterativeRobot {
 		Winch.talon6.set(0);
 		Winch.talon7.set(0);*/
 		
-		/*
+		
 		breach.breachSpeed = 0;
 		breach.isBreaching = false;
 		Breach.talon4.set(0);
-		*/
 		
-		climb.climbSpeed = 0;
+		
+		/*climb.climbSpeed = 0;
 		climb.isClimbing = false;
-		Climb.talon5.set(0);
+		Climb.talon5.set(0);*/
 		
 		drive.driveSpeed = 0;
 		drive.isDriving = false;
