@@ -3,7 +3,9 @@ package org.usfirst.frc.team1757.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 /**
  * @author Larry Tseng
@@ -15,11 +17,11 @@ public class Robot extends IterativeRobot {
 	
 	Joystick gamepad;
 	edu.wpi.first.wpilibj.CANTalon talon;
-	/*
-	Winch winch; 
-	Breach breach;
+
+	//Winch winch; 
+	//Breach breach;
 	Climb climb;
-	*/
+	
 	Drive drive;
 	
 	
@@ -28,18 +30,18 @@ public class Robot extends IterativeRobot {
 	 * used for any initialization code.
 	 */
 	public void robotInit() {
-		isRunning = false;
+		isRunning = true;
 		gamepad = new Joystick(0);
 		
 		talon = new edu.wpi.first.wpilibj.CANTalon(1);
-		/*
-		winch = new Winch(0.0, false, Winch.winchTypes.DirectWinch);
-		breach = new Breach(0.0, false);
+		
+		//winch = new Winch(0.0, false, Winch.winchTypes.DirectWinch);
+		//breach = new Breach(0.0, false);
 		climb = new Climb(0.0, false);
-		*/
+		
 		drive = new Drive(0.0, false, Drive.driveTypes.ArcadeDrive);
 		
-		Constants.setConstants(Constants.GamepadTypes.Logitech_DualAction);
+		Constants.setConstants(Constants.GamepadTypes.Xbox360);
 		
 	}
 
@@ -63,7 +65,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void teleopInit() {
 		isRunning = true;
-		//drive.setDriveType(Drive.driveTypes.SimpleDrive);
+		drive.setDriveType(Drive.driveTypes.ArcadeDrive);
 	}
 	/**
 	 * This function is called periodically during operator control
@@ -71,23 +73,22 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		while(isEnabled() && isOperatorControl()) {
 			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
-			drive.doPIDArcadeDrive(gamepad);
+			//drive.doPIDArcadeDrive(gamepad);
 
-			/*
-			if (gamepad.getRawButton(Constants.BUTTON_A)) {
+			/* if (gamepad.getRawButton(Constants.BUTTON_START)) {
 				isRunning = !isRunning;
-				System.out.println("button A has been pressed - wait 1 second.");
+				System.out.println("button START has been pressed - wait 1 second.");
 				Timer.delay(1);
 				
 				if (isRunning) {
 					System.out.println("Ready.");
 				} else {
 					didStop();
-					System.out.println("Robot didStop()... Press 'A' to re-enable.");
+					System.out.println("Robot didStop()... Press 'START' to re-enable.");
 				}
-			}
+			} */
 			
-			if (gamepad.getRawButton(Constants.BUTTON_LB)) {
+		/* 	if (gamepad.getRawButton(Constants.BUTTON_LB)) {
 				if (drive.driveType == Drive.driveTypes.ArcadeDrive) {
 					drive.driveType = Drive.driveTypes.PIDArcadeDrive;
 				} else if (drive.driveType == Drive.driveTypes.PIDArcadeDrive) {
@@ -95,24 +96,25 @@ public class Robot extends IterativeRobot {
 				} else {
 					drive.driveType = Drive.driveTypes.ArcadeDrive;
 				}
-			}
+			} */
 			
 			if (isRunning) {
 				drive.printDriveMessages(gamepad);
 				drive.doDrive(gamepad);
-				breach.printBreachMessages(gamepad);
-				breach.doBreach(gamepad);
+				//breach.printBreachMessages(gamepad);
+				//breach.doBreach(gamepad);
+				
 				climb.printClimbMessages(gamepad);
 				climb.doClimb(gamepad);
-				winch.printWinchMessages(gamepad);
-				winch.doWinch(gamepad);
 				
-				if (gamepad.getRawButton(Constants.BUTTON_B)) {
+				//winch.printWinchMessages(gamepad);
+				//winch.doWinch(gamepad);
+				
+				/* if (gamepad.getRawButton(Constants.BUTTON_B)) {
 					didStop();
-					System.out.println("Button B has been pressed. Press A to re-enable.");
-				}
+					System.out.println("Button B has been pressed. Press START to re-enable.");
+				} */
 			}
-			*/
 		}
 	}
 
@@ -126,19 +128,20 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 
 	}
-	
-	/*
+
 	public void didStop() {
-		isRunning = false;
+		//isRunning = false;
 		
-		winch.winchSpeed = 0;
+		/*winch.winchSpeed = 0;
 		winch.isWinching = false;
 		Winch.talon6.set(0);
-		Winch.talon7.set(0);
+		Winch.talon7.set(0);*/
 		
+		/*
 		breach.breachSpeed = 0;
 		breach.isBreaching = false;
 		Breach.talon4.set(0);
+		*/
 		
 		climb.climbSpeed = 0;
 		climb.isClimbing = false;
@@ -154,5 +157,4 @@ public class Robot extends IterativeRobot {
 		System.out.println("Robot didStop()...");
 		Timer.delay(1);
 	}
-	*/
 }

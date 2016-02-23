@@ -247,7 +247,7 @@ public class Constants {
     	BUTTON_Y = 4, BUTTON_LB = 5, BUTTON_RB = 6,
     	BUTTON_START = 8, BUTTON_BACK = 7, 
     	BUTTON_LS = 9, BUTTON_RS = 10, 
-    	AXIS_X = 0, AXIS_Y = 1, AXIS_RSX = 2, AXIS_RSY = 5,
+    	AXIS_X = 0, AXIS_Y = 1, AXIS_RSX = 4, AXIS_RSY = 5,
     	AXIS_LT = 2, AXIS_RT = 3;
 	}
 	

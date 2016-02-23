@@ -51,12 +51,12 @@ public class Drive {
 		pidTeam = new CANTeamDrive(new CANSpeedController[] {leftTeam, rightTeamInverted});
 		pidController = new PIDController(driveSpeed, .04, 0.0, 0.0, 0.0, gyrometer, pidTeam);
 		
-		drive = new RobotDrive(leftTeam, rightTeam);
+		drive = new RobotDrive(leftTeam, rightTeamInverted);
 		drive.setSafetyEnabled(false);
 	}
 
 	public enum driveTypes {
-		ArcadeDrive, TankDrive, PIDArcadeDrive, SimpleDrive, AutonomousDrive;
+		ArcadeDrive, TankDrive, PIDArcadeDrive, SimpleDrive, SimpleArcadeDrive, AutonomousDrive;
 	}
 	
 	public void setDriveType(driveTypes driveType) {
@@ -81,8 +81,19 @@ public class Drive {
 	}
 	
 	public void doArcadeDrive(Joystick gamepad) {
-		
+		//CHECK AXIS MAPPING!!!
 		drive.arcadeDrive(-gamepad.getRawAxis(Constants.AXIS_RSX)*Constants.SENSITIVITY, -gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY);
+	}
+	
+	public void doSimpleArcadeDrive(Joystick gamepad) {
+		leftTeam.setInverted(false);
+		rightTeam.setInverted(false);
+		
+		leftTeam.set(gamepad.getY());
+		rightTeam.set(-gamepad.getY());
+		
+		leftTeam.set(-gamepad.getRawAxis(Constants.AXIS_RSX));
+		rightTeam.set(gamepad.getRawAxis(Constants.AXIS_RSX));
 	}
 	
 	public void doSimpleDrive(Joystick gamepad) {
@@ -98,9 +109,7 @@ public class Drive {
 	}
 	
 	public void doPIDArcadeDrive(Joystick gamepad) {
-		pidController.enable();
 		pidController.setDrive(gamepad.getY()*Constants.SENSITIVITY);
-		
 		
 		/*
 		if (gamepad.getRawButton(Constants.Gamepad_LogitechDual.BUTTON_B)) {
@@ -145,10 +154,14 @@ public class Drive {
 			doTankDrive(gamepad); 
 			break;
 		case PIDArcadeDrive: 
+			pidController.enable();
 			doPIDArcadeDrive(gamepad); 
 			break;
 		case SimpleDrive:
 			doSimpleDrive(gamepad);
+			break;
+		case SimpleArcadeDrive:
+			doSimpleArcadeDrive(gamepad);
 			break;
 		default: System.out.println("Drive type not selected");
 			break; 

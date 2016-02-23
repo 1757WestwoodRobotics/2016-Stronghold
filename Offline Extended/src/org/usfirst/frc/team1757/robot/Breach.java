@@ -23,7 +23,7 @@ public class Breach {
 		this.isBreaching = isBreaching;
 
 		talon4 = new CANTalon(4);
-		//talon4.setInverted(true); //MAYBE?
+		talon4.setInverted(false);
 	}
 	
 	
@@ -36,14 +36,14 @@ public class Breach {
 	
 	//TODO This is hardcoded for the LogitechDualAction
 	public void doBreach(Joystick gamepad) {
-		if (gamepad.getRawButton(Constants.BUTTON_RT)) {
+		if (gamepad.getRawButton(Constants.BUTTON_A)) {
 			breachSpeed -= 0.01;
-			System.out.println("Decrementing breachSpeed...");
+			System.out.println("Decrementing breachSpeed..." + breachSpeed);
 			Timer.delay(0.1);
 			breachSpeed = Math.max(-1, breachSpeed);
-		} else if (gamepad.getRawButton(Constants.BUTTON_LT)) {
+		} else if (gamepad.getRawButton(Constants.BUTTON_Y)) {
 			breachSpeed += 0.01;
-			System.out.println("Incrementing breachSpeed...");
+			System.out.println("Incrementing breachSpeed..." + breachSpeed);
 			Timer.delay(0.1);
 			breachSpeed = Math.min(1, breachSpeed);
 		}
