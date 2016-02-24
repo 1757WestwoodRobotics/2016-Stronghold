@@ -149,11 +149,12 @@ public class Constants {
 	    
 		public static final double
 		Kp = 0.04, Ki = 0.00, Kd = 0.00, Kf = 0, turnConstant = 0.8;
-	    ;
+	    //TODO: Need to adjust D for optimization
 	}
 	
 	public static final class AIO_ {
 		private AIO_(){}
+		
 		
 		//public static final int
 		//TRANSDUCER, GYROMETER;
@@ -165,13 +166,18 @@ public class Constants {
 		//public static final int
 		//STOPSWITCH;
 	}
+	public static final class BreachArm {
+		private BreachArm(){};
+		public static final double 
+		STRINGPOT_MAX = .56d, STRINGPOT_MIN = .1d, ARM_SPEED = .5d;
+		
+	}
 	
 	public static final class Camera {
 		private Camera(){}
 		public static final int 
 		CURRCAM = 0, MAX_FPS = 30, QUALITY = 10, SLEEP_TIME = 100;
 	}
-	
 	public static final class Gamepad_LogitechDual {
 		private Gamepad_LogitechDual(){}
 		
@@ -239,7 +245,7 @@ public class Constants {
 		private Gamepad_Xbox360() {}
 		
 		public static final int PORT = 1;
-		public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 1.0f;
+		public static final float DEADZONE = 0.05f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 1.0f;
 		public static final String MODE = "Xbox360";
 		
 		public static final int

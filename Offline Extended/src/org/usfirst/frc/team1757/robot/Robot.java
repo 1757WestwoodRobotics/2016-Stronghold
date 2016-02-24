@@ -7,10 +7,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-/**
- * @author Larry Tseng
- * 
- */
 public class Robot extends IterativeRobot {
 
 	boolean isRunning;
@@ -20,7 +16,7 @@ public class Robot extends IterativeRobot {
 
 	//Winch winch; 
 	Breach breach;
-	//Climb climb;
+	Climb climb;
 	
 	Drive drive;
 	
@@ -36,8 +32,8 @@ public class Robot extends IterativeRobot {
 		talon = new edu.wpi.first.wpilibj.CANTalon(1);
 		
 		//winch = new Winch(0.0, false, Winch.winchTypes.DirectWinch);
-		breach = new Breach(0.0, false);
-		//climb = new Climb(0.0, false);
+		breach = new Breach(Constants.BreachArm.ARM_SPEED, false);
+		climb = new Climb(0.0, false);
 		
 		drive = new Drive(0.0, false, Drive.driveTypes.ArcadeDrive);
 		
@@ -47,17 +43,21 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousInit() {
 		System.out.println("AUTO mode has started.");
-		//drive.setDriveType(Drive.driveTypes.);
+		// shouldn't matter drive.setDriveType(Drive.driveTypes.PIDArcadeDrive);
+		drive.pidLeft.enable();
+		drive.pidRight.enable();
 	}
 
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-		while(isEnabled() && isAutonomous()) {
-			//Autonomous.executeAutonomous(Defenses.LOW_BAR, drive);
-			System.out.println("Robot is autonomously driving");
-		}
+		boolean bool = true;
+			if (bool){
+				System.out.println("Robot is autonomously driving");
+				drive.doAutoDrive(.8, 1);
+			}
+			bool = false;
 	}
 
 	/**
@@ -73,6 +73,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		while(isEnabled() && isOperatorControl()) {
 			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
+			SmartDashboard.putString("DriveType", drive.driveType.toString());
 			//drive.doPIDArcadeDrive(gamepad);
 
 			/* if (gamepad.getRawButton(Constants.BUTTON_START)) {
@@ -97,6 +98,9 @@ public class Robot extends IterativeRobot {
 					drive.driveType = Drive.driveTypes.ArcadeDrive;
 				}
 			}
+			if (gamepad.getRawButton(Constants.BUTTON_X)){
+				drive.resetPIDArcadeDrive();
+			}
 			
 			if (isRunning) {
 				drive.printDriveMessages(gamepad);
@@ -104,8 +108,8 @@ public class Robot extends IterativeRobot {
 				breach.printBreachMessages(gamepad);
 				breach.doBreach(gamepad);
 				
-				//climb.printClimbMessages(gamepad);
-				//climb.doClimb(gamepad);
+				climb.printClimbMessages(gamepad);
+				climb.doClimb(gamepad);
 				
 				//winch.printWinchMessages(gamepad);
 				//winch.doWinch(gamepad);
@@ -115,6 +119,11 @@ public class Robot extends IterativeRobot {
 					System.out.println("Button B has been pressed. Press START to re-enable.");
 				} */
 			}
+			
+			/** Teleop Commands to Get Over Obstables using button inputs
+			 * 
+			 */
+			//TODO: Use Teleop Commands -- runnable so you can cancel it during execution
 		}
 	}
 
@@ -143,9 +152,9 @@ public class Robot extends IterativeRobot {
 		Breach.talon4.set(0);
 		
 		
-		/*climb.climbSpeed = 0;
+		climb.climbSpeed = 0;
 		climb.isClimbing = false;
-		Climb.talon5.set(0);*/
+		Climb.talon5.set(0);
 		
 		drive.driveSpeed = 0;
 		drive.isDriving = false;
@@ -154,7 +163,7 @@ public class Robot extends IterativeRobot {
 		Drive.frontRightMotor.set(0);
 		Drive.backLeftMotor.set(0);
 		
-		System.out.println("Robot didStop()...");
+		System.out.println("Robot stopped...");
 		Timer.delay(1);
 	}
 }

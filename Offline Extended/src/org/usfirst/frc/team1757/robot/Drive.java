@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1757.robot;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.CANSpeedController;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -18,8 +17,8 @@ public class Drive {
 	RobotDrive drive;
 
     static CANTalon frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor;
-    PIDController pidController;
-    CANTeamDrive leftTeam, rightTeam, rightTeamInverted, pidTeam;
+    PIDController pidRight, pidLeft;
+    CANTeamDrive leftTeam, rightTeam, pidTeam;
 
     double setpoint, initialTurn;
     
@@ -37,22 +36,26 @@ public class Drive {
 		backLeftMotor = new CANTalon(1);
 		frontRightMotor = new CANTalon(2);
 		backRightMotor = new CANTalon(3);
-		frontLeftMotor.enableBrakeMode(false); backLeftMotor.enableBrakeMode(false);
-		frontRightMotor.enableBrakeMode(false); backRightMotor.enableBrakeMode(false);
+		frontLeftMotor.enableBrakeMode(false); 
+		backLeftMotor.enableBrakeMode(false);
+		frontRightMotor.enableBrakeMode(false); 
+		backRightMotor.enableBrakeMode(false);
 		
 		leftTeam = new CANTeamDrive(new CANTalon[] {frontLeftMotor, backLeftMotor});
-		rightTeam = new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
-		rightTeamInverted = new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
-		rightTeamInverted.setInverted(true);
+		rightTeam= new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
+
+		//leftTeam = new CANTeamDrive(new CANTalon[] {frontLeftMotor}); no grindy
+		//rightTeam= new CANTeamDrive(new CANTalon[] {frontRightMotor});
 		
 		gyrometer = new ADXRS450_Gyro();
 		gyrometer.reset();
 
-		pidTeam = new CANTeamDrive(new CANSpeedController[] {leftTeam, rightTeamInverted});
-		pidController = new PIDController(driveSpeed, .04, 0.0, 0.0, 0.0, gyrometer, pidTeam);
+		pidRight = new PIDController(driveSpeed, Constants.PID_.Kp, Constants.PID_.Ki,Constants.PID_.Kd, Constants.PID_.Kf, gyrometer, rightTeam);
+		pidLeft = new PIDController(driveSpeed, Constants.PID_.Kp, Constants.PID_.Ki,Constants.PID_.Kd, Constants.PID_.Kf, gyrometer, leftTeam);
 		
-		drive = new RobotDrive(leftTeam, rightTeamInverted);
+		drive = new RobotDrive(leftTeam, rightTeam);
 		drive.setSafetyEnabled(false);
+		rightTeam.setInverted(true);
 	}
 
 	public enum driveTypes {
@@ -66,8 +69,13 @@ public class Drive {
 	public void printDriveMessages(Joystick gamepad) {
 		SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(Constants.AXIS_Y)*0.5);
 		SmartDashboard.putNumber("Right Axis", gamepad.getRawAxis(Constants.AXIS_RSY)*0.5);
+		//SmartDashboard.putString("DriveType", this.driveType.toString());
 		SmartDashboard.putBoolean("isDriving?", isDriving);
-	
+		SmartDashboard.putData("pidLeft", pidLeft);
+		SmartDashboard.putData("pidRight", pidRight);
+		SmartDashboard.putData("Gyro", gyrometer);
+		SmartDashboard.putNumber("Angle", gyrometer.getAngle());
+		
 		/*SmartDashboard.putNumber("talon0-motorCurrent", talon0.getOutputCurrent());
 		SmartDashboard.putNumber("talon1-motorCurrent", talon1.getOutputCurrent());
 		SmartDashboard.putNumber("talon2-motorCurrent", talon2.getOutputCurrent());
@@ -81,14 +89,24 @@ public class Drive {
 	}
 	
 	public void doArcadeDrive(Joystick gamepad) {
-		//CHECK AXIS MAPPING!!!
-		drive.arcadeDrive(-gamepad.getRawAxis(Constants.AXIS_RSX)*Constants.SENSITIVITY, -gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY);
+		/**
+		 * Calls arcade drive and gives it value of sticks, if the sticks are outside their deadzone
+		 */
+		double rightStick = 0;
+		double leftStick = 0;
+		if (gamepad.getRawAxis(Constants.AXIS_RSX)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_RSX)<-Constants.DEADZONE ) {
+			rightStick = -gamepad.getRawAxis(Constants.AXIS_RSX)*Constants.SENSITIVITY;
+			
+		}
+		if (gamepad.getRawAxis(Constants.AXIS_Y)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_Y)<-Constants.DEADZONE ) {
+			leftStick = -gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY;
+			
+		}
+		drive.arcadeDrive(rightStick, leftStick);
+		
 	}
 	
 	public void doSimpleArcadeDrive(Joystick gamepad) {
-		leftTeam.setInverted(false);
-		rightTeam.setInverted(false);
-		
 		leftTeam.set(gamepad.getY());
 		rightTeam.set(-gamepad.getY());
 		
@@ -97,11 +115,6 @@ public class Drive {
 	}
 	
 	public void doSimpleDrive(Joystick gamepad) {
-		frontLeftMotor.setInverted(false);
-		backLeftMotor.setInverted(false);
-		frontRightMotor.setInverted(false);
-		backRightMotor.setInverted(false);
-		
 		frontLeftMotor.set(gamepad.getY());
 		backLeftMotor.set(gamepad.getY());
 		frontRightMotor.set(-gamepad.getY());
@@ -109,39 +122,47 @@ public class Drive {
 	}
 	
 	public void doPIDArcadeDrive(Joystick gamepad) {
-		pidController.setDrive(gamepad.getY()*Constants.SENSITIVITY);
-		
-		/*
-		if (gamepad.getRawButton(Constants.Gamepad_LogitechDual.BUTTON_B)) {
-			if (pidController.isEnabled()) {
-				pidController.disable();
-				driveType = driveTypes.ArcadeDrive;
-			}
-			else {
-				pidController.enable();
-			}
-		}
-		*/
+		pidLeft.setInverted(true);
+		pidRight.setDrive(-gamepad.getY()*Constants.SENSITIVITY);
+		pidLeft.setDrive(gamepad.getY()*Constants.SENSITIVITY);
 		
 		//TODO Utilize wrapper implementation of deadzone
 		if (gamepad.getRawAxis(Constants.AXIS_RSX) > .1) {
 			setpoint += gamepad.getRawAxis(3)*Constants.PID_.turnConstant;
-			pidController.setSetpoint(setpoint);
+			pidRight.setSetpoint(setpoint);
+			pidLeft.setSetpoint(setpoint);
 		}
 		
 		if (gamepad.getRawAxis(Constants.AXIS_RSX) < -.1) {
 			setpoint += gamepad.getRawAxis(3)*Constants.PID_.turnConstant;
-			pidController.setSetpoint(setpoint);
+			pidRight.setSetpoint(setpoint);
+			pidLeft.setSetpoint(setpoint);
 		}
 	}
 	
-	public void doAutoDrive(double speed, double time) {
+	public void resetPIDArcadeDrive(){
+		gyrometer.reset();
 		setpoint = 0;
-		double _currentTime = Timer.getFPGATimestamp();
-		while (Timer.getFPGATimestamp() < (_currentTime + time)) {
-			pidController.setDrive(speed);
-		}
-		System.out.println("doing AutoDrive");
+		//TODO: not necessary fuck
+		pidLeft.setSetpoint(0);
+		pidRight.setSetpoint(0);
+		
+	}
+	
+	public void doAutoDrive(double speed, double time) {
+		/*
+		setpoint = 0;
+		System.out.println("starting AutoDrive");
+		pidRight.setInverted(true);
+		pidRight.setDrive(-speed);
+		pidLeft.setDrive(speed);
+		Timer.delay(time);
+		pidRight.setDrive(0);
+		pidLeft.setDrive(0);
+		*/
+		leftTeam.set(-.8);
+		rightTeam.set(.8);
+		Timer.delay(time);
 	}
 
 	
@@ -154,7 +175,8 @@ public class Drive {
 			doTankDrive(gamepad); 
 			break;
 		case PIDArcadeDrive: 
-			pidController.enable();
+			pidLeft.enable();
+			pidRight.enable();
 			doPIDArcadeDrive(gamepad); 
 			break;
 		case SimpleDrive:

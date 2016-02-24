@@ -356,16 +356,16 @@ private boolean m_usingPercentTolerance;
         }
       }
       if (m_invert == true){
-    	  pidOutput.pidWrite(result - m_drive);
+    	  pidOutput.pidWrite(-result - m_drive);
     	  SmartDashboard.putNumber("result invert", result);
     	  SmartDashboard.putNumber("result plus drive invert", result+m_drive);
-    	  System.out.println("I'm Inverted");
+    	 
       }
       else{
     	  pidOutput.pidWrite(result + m_drive);
     	  SmartDashboard.putNumber("result", result);
     	  SmartDashboard.putNumber("result plus drive ", result+m_drive);
-    	  System.out.println("I'm not Inverted");
+    	
       }
     }
   }
