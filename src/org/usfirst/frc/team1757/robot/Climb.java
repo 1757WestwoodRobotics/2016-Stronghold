@@ -37,7 +37,9 @@ public class Climb {
 	}
 
 	public void doClimb(Joystick gamepad) {
-
+		/**
+		 * TODO: FIX BUTTONS ACCORDING TO DRIVER PREFERENCE
+		 */
 		if (gamepad.getPOV(0) == 180) {
 			climbSpeed -= 0.01;
 			System.out.println("Decrementing climbSpeed...");

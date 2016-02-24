@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * TODO: FIX BUTTONS ACCORDING TO DRIVER'S PREFERENCE!!!
+ */
 
 public class Robot extends IterativeRobot {
 
@@ -76,19 +79,6 @@ public class Robot extends IterativeRobot {
 			SmartDashboard.putString("DriveType", drive.driveType.toString());
 			//drive.doPIDArcadeDrive(gamepad);
 
-			/* if (gamepad.getRawButton(Constants.BUTTON_START)) {
-				isRunning = !isRunning;
-				System.out.println("button START has been pressed - wait 1 second.");
-				Timer.delay(1);
-				
-				if (isRunning) {
-					System.out.println("Ready.");
-				} else {
-					didStop();
-					System.out.println("Robot didStop()... Press 'START' to re-enable.");
-				}
-			} */
-			
 			if (gamepad.getRawButton(Constants.BUTTON_B)) {
 				if (drive.driveType == Drive.driveTypes.ArcadeDrive) {
 					drive.driveType = Drive.driveTypes.PIDArcadeDrive;
@@ -114,10 +104,6 @@ public class Robot extends IterativeRobot {
 				//winch.printWinchMessages(gamepad);
 				//winch.doWinch(gamepad);
 				
-				/* if (gamepad.getRawButton(Constants.BUTTON_B)) {
-					didStop();
-					System.out.println("Button B has been pressed. Press START to re-enable.");
-				} */
 			}
 			
 			/** Teleop Commands to Get Over Obstables using button inputs
