@@ -355,22 +355,24 @@ private boolean m_usingPercentTolerance;
           m_bufTotal -= m_buf.pop();
         }
       }
+      //TODO: REMOVE This shouldn't be used to controll invert 
+      /*
       if (m_invert == true){
     	  pidOutput.pidWrite(-result - m_drive);
     	  SmartDashboard.putNumber("result invert", result);
     	  SmartDashboard.putNumber("result plus drive invert", result+m_drive);
     	 
       }
-      else{
+      else {*/
     	  pidOutput.pidWrite(result + m_drive);
     	  SmartDashboard.putNumber("result", result);
     	  SmartDashboard.putNumber("result plus drive ", result+m_drive);
-    	
-      }
+ // }
     }
   }
   public void setInverted(boolean inverted){
 	  m_invert = inverted;
+	  
   }
   public void setDrive(double speed){
 	  m_drive = speed;

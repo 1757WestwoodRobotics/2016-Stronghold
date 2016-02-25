@@ -150,19 +150,13 @@ public class Drive {
 	}
 	
 	public void doAutoDrive(double speed, double time) {
-		/*
 		setpoint = 0;
 		System.out.println("starting AutoDrive");
-		pidRight.setInverted(true);
 		pidRight.setDrive(-speed);
 		pidLeft.setDrive(speed);
 		Timer.delay(time);
 		pidRight.setDrive(0);
 		pidLeft.setDrive(0);
-		*/
-		leftTeam.set(-.8);
-		rightTeam.set(.8);
-		Timer.delay(time);
 	}
 
 	
