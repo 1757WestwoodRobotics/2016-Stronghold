@@ -42,8 +42,8 @@ public class Drive {
 		backRightMotor.enableBrakeMode(false);
 		
 		leftTeam = new CANTeamDrive(new CANTalon[] {frontLeftMotor, backLeftMotor});
-		rightTeam= new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
-
+		rightTeam = new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
+			
 		//leftTeam = new CANTeamDrive(new CANTalon[] {frontLeftMotor}); no grindy
 		//rightTeam= new CANTeamDrive(new CANTalon[] {frontRightMotor});
 		

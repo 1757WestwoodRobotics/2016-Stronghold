@@ -9,9 +9,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * TODO: FIX BUTTONS ACCORDING TO DRIVER'S PREFERENCE!!!
  * TODO: ADD BUTTON MAP (DIAGRAM)
  * TODO: WORK ON AUTONOMOUS MODE
- * TODO: WORK ON STRAIGHT DRIVING
- * TODO: TEST PID
+ * TODO: WORK ON STRAIGHT DRIVING 
+ * TODO: TEST PID (OR MASTER-SLAVE MODE)
  * TODO: TEST VALUES OF SERVO, STRINGPOT, AND ARMS
+ * !!!!: Ensure robot application calls Set() on each Talon at least once per loop
  */
 
 public class Robot extends IterativeRobot {

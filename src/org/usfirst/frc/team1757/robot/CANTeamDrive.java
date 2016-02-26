@@ -25,7 +25,11 @@ public class CANTeamDrive implements CANSpeedController, PIDOutput {
     public CANTeamDrive(final CANSpeedController[] controllerArray) {
         motorControllers = new Vector<CANSpeedController>(controllerArray.length);
         for (CANSpeedController controller:controllerArray) {
-            motorControllers.addElement(controller);
+        	if (!motorControllers.isEmpty()) {
+        		motorControllers.addElement(controller);
+        	} else {
+        		System.out.println("motorControllers is EMPTY!!!");
+        	}
         }
     }
     
