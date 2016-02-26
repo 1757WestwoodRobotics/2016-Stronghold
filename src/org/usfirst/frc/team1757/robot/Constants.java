@@ -3,6 +3,8 @@ package org.usfirst.frc.team1757.robot;
  * 
  * @author loading
  *
+ * TODO: enumeration of buttons, switch button assignment depending on controller
+ *
  */
 
 public class Constants {
@@ -21,7 +23,7 @@ public class Constants {
 	//Note that an index of -1 on any Gamepad variable means that the button does not exist in hardware and should not be referenced
 	
 	public enum GamepadTypes {
-		Logitech_DualAction, Logitech_F310, Xbox360, Gamecube
+		Logitech_DualAction, Logitech_F310, Xbox360, Gamecube, Joystick_USB;
 	}
 	
 	public static void setConstants(GamepadTypes type) {
