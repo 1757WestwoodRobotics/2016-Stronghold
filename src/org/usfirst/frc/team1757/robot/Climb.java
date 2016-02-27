@@ -19,21 +19,16 @@ public class Climb {
 	boolean isClimbing;
 
 	static CANTalon talon5;
-
-	public Climb(double climbSpeed, boolean isClimbing) {
-		this.climbSpeed = climbSpeed;
-		this.isClimbing = isClimbing;
-
+	
+	static {
 		talon5 = new CANTalon(5);
-		
 		talon5.enableBrakeMode(true);
 		talon5.setInverted(true);
 	}
 
-	public void printClimbMessages(Joystick gamepad) {
-		SmartDashboard.putNumber("ClimbArm-ClimbSpeed" , climbSpeed);
-		SmartDashboard.putBoolean("ClimbArm-Going Up?", gamepad.getRawButton(Constants.BUTTON_Y));
-		SmartDashboard.putNumber("Climb-motorCurrent", talon5.getOutputCurrent());
+	public Climb(double climbSpeed, boolean isClimbing) {
+		this.climbSpeed = climbSpeed;
+		this.isClimbing = isClimbing;
 	}
 
 	public void doClimb(Joystick gamepad) {
@@ -64,5 +59,8 @@ public class Climb {
 			talon5.set(0);
 			isClimbing = false;
 		}	
+		
+		SmartDashboard.putNumber("ClimbArm-ClimbSpeed" , climbSpeed);
+		SmartDashboard.putBoolean("ClimbArm-isClimbing?", isClimbing);
 	}
 }

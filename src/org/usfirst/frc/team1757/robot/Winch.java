@@ -26,15 +26,17 @@ public class Winch {
 	PIDWinch pidWinch;
 	WinchBase winch;
 	
+	static {
+		talon6 = new CANTalon(6);
+		talon7 = new CANTalon(7);
+		talon6.setInverted(true);
+		talon6.enableBrakeMode(false);
+	}
+	
 	public Winch(double winchSpeed, boolean isWinching, winchTypes winchType) {
 		this.winchSpeed = winchSpeed;
 		this.isWinching = isWinching;
 		
-		talon6 = new CANTalon(6);
-		talon7 = new CANTalon(7);
-		
-		talon6.setInverted(true);
-		talon6.enableBrakeMode(false);
 		//servo = new Servo(1);
 		
 		directWinch = new DirectWinch(talon6, talon7);
@@ -45,14 +47,7 @@ public class Winch {
 	public enum winchTypes {
 		DirectWinch, PIDWinch;
 	}
-	
-	public void printWinchMessages(Joystick gamepad) {
-		SmartDashboard.putBoolean("Winch-GoingUp?", isWinching);
-		SmartDashboard.putNumber("winchSpeed", winchSpeed);
-		SmartDashboard.putNumber("Winch-leftMotorCurrent", talon6.getOutputCurrent());
-		SmartDashboard.putNumber("Winch-rightMotorCurrent", talon7.getOutputCurrent());
-	}
-	
+
 	public void setWinchType(winchTypes winchType) {
 		switch (winchType) {
 		case DirectWinch:
@@ -88,6 +83,12 @@ public class Winch {
 			winch.stop();
 			winch.disable();
 		}
+		
+		SmartDashboard.putBoolean("Winch-GoingUp?", isWinching);
+		SmartDashboard.putNumber("winchSpeed", winchSpeed);
+		SmartDashboard.putNumber("Winch-leftMotorCurrent", talon6.getOutputCurrent());
+		SmartDashboard.putNumber("Winch-rightMotorCurrent", talon7.getOutputCurrent());
+		
 	}
 }
 //servo.set((gamepad.getRawAxis(AXIS_X)+1)/2);

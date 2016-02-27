@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * TODO: FIX BUTTONS ACCORDING TO DRIVER'S PREFERENCE!!!
  * TODO: ADD BUTTON MAP (DIAGRAM)
+ * TODO: REMOVE SAFETY BUTTONS
  * TODO: WORK ON AUTONOMOUS MODE
  * TODO: WORK ON STRAIGHT DRIVING 
  * TODO: TEST PID (OR MASTER-SLAVE MODE)
@@ -101,13 +102,8 @@ public class Robot extends IterativeRobot {
 				drive.printDriveMessages(gamepad);
 				drive.doDrive(gamepad);
 
-				breach.printBreachMessages(gamepad);
 				breach.doBreach(gamepad);
-
-				climb.printClimbMessages(gamepad);
 				climb.doClimb(gamepad);
-
-				winch.printWinchMessages(gamepad);
 				winch.doWinch(gamepad);
 			}
 

@@ -18,23 +18,20 @@ public class Breach {
 	
 	static CANTalon talon4;
 	
+	static {
+		talon4 = new CANTalon(4);
+		talon4.setInverted(false);	
+	}
 	
 	public Breach(double breachSpeed, boolean isBreaching) {
 		this.breachSpeed = breachSpeed;
 		this.isBreaching = isBreaching;
-
-		talon4 = new CANTalon(4);
-		talon4.setInverted(false);
 		stringPot = new AnalogPotentiometer(0);
 	}
 	
-
-	public void printBreachMessages(Joystick gamepad) {
-		SmartDashboard.putNumber("breachSpeed", breachSpeed);
-		SmartDashboard.putBoolean("isBreaching?", isBreaching);
-		SmartDashboard.putNumber("String Pot", stringPot.get());
-		//SmartDashboard.putNumber("Breach-motorCurrent", talon4.getOutputCurrent());
-	}
+	/**
+	 * NEEDS FIXING, AND TUNING!!! (OVERRIDE?)
+	 */
 
 	public void doBreach(Joystick gamepad) {
 		if (gamepad.getRawAxis(Constants.BUTTON_LT) > .2) {
@@ -63,5 +60,10 @@ public class Breach {
 			talon4.set(0);
 			isBreaching = false;
 		}
+		
+		SmartDashboard.putNumber("Breach-breachSpeed", breachSpeed);
+		SmartDashboard.putBoolean("Breach-isBreaching?", isBreaching);
+		SmartDashboard.putNumber("String Pot", stringPot.get());
+		
 	}
 }
