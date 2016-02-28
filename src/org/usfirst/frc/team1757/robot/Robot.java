@@ -7,12 +7,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * TODO: FIX BUTTONS ACCORDING TO DRIVER'S PREFERENCE!!!
- * TODO: ADD BUTTON MAP (DIAGRAM)
- * TODO: REMOVE SAFETY BUTTONS
  * TODO: WORK ON AUTONOMOUS MODE
  * TODO: WORK ON STRAIGHT DRIVING 
  * TODO: TEST PID (OR MASTER-SLAVE MODE)
- * TODO: TEST VALUES OF SERVO, STRINGPOT, AND ARMS
+ * TODO: CHECK VALUES OF SERVO, STRINGPOT, AND ARMS
  * !!!!: Ensure robot application calls Set() on each Talon at least once per loop
  */
 
@@ -52,7 +50,7 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousInit() {
 		System.out.println("AUTO mode has started.");
-		// shouldn't matter drive.setDriveType(Drive.driveTypes.PIDArcadeDrive);
+		drive.setDriveType(Drive.driveTypes.PIDArcadeDrive); //??
 		drive.pidLeft.enable();
 		drive.pidRight.enable();
 	}
@@ -66,7 +64,7 @@ public class Robot extends IterativeRobot {
 			System.out.println("Robot is autonomously driving");
 			drive.doAutoDrive(.8, 1);
 		}
-		bool = false;
+		bool = false; //??
 	}
 
 	/**

@@ -28,6 +28,7 @@ public class Drive {
 	public Drive(double driveSpeed, boolean isDriving, driveTypes driveType) {
 		this.driveSpeed = driveSpeed;
 		this.isDriving = isDriving;
+		
 		setpoint = 0.0;
 		initialTurn = 10;
 		this.driveType = driveType;
