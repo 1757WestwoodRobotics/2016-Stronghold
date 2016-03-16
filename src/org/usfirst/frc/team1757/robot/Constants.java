@@ -27,8 +27,8 @@ public class Constants {
 	}
 	
 	//DO NOT USE YET!!!
-	public enum GamepadButtons {
-		BUTTON_A(), BUTTON_B(), BUTTON_X(), BUTTON_Y();
+	/*public enum GamepadButtons {
+		BUTTON_A, BUTTON_B, BUTTON_X, BUTTON_Y;
 		public int port;
 		public int getPort() {
 			return port;
@@ -39,8 +39,8 @@ public class Constants {
 	}
 	
 	public void mapButton(GamepadTypes gamepadType) {
-		switch (GamepadType) {
-			case Logitech_DualACtion:
+		switch (gamepadType) {
+			case Logitech_DualAction:
 				for (GamepadButtons gamepadButton:GamepadButtons.values()) {
 					int buttonPort =  	//HASHMAP??
 					gamepadButton.setPort(buttonPort);
@@ -53,7 +53,7 @@ public class Constants {
 			case Gamecube:
 				break;
 		}
-	}
+	}*/
 	
 	public static void setConstants(GamepadTypes type) {
 		if (type == GamepadTypes.Logitech_DualAction) {
@@ -209,6 +209,7 @@ public class Constants {
 		public static final int 
 		CURRCAM = 0, MAX_FPS = 30, QUALITY = 10, SLEEP_TIME = 100;
 	}
+	
 	public static final class Gamepad_LogitechDual {
 		private Gamepad_LogitechDual(){}
 		
@@ -223,12 +224,19 @@ public class Constants {
 		BUTTON_START = 10, BUTTON_LS = 11, BUTTON_RS = 12,
 		AXIS_X = 0, AXIS_Y = 1, AXIS_RSX = 2, AXIS_RSY = 3;
 		
-		public static mapButtons() {
-			HashMap<GamepadButtons, Integer> Logitech_DualAction_Buttons = new HashMap<GamepadButtons, Integer>(GamepadButtons.class);
-			for ()
-		}
 	}
-	
+	/*	  
+	 * if (gamepad.getRawButton(Constants.Button_A){
+	 * 
+	 * }
+	 * 
+	 * 
+	 * 
+	 * 
+	 * }
+	 * 
+	 * port = [1,3, 5,6] 
+	 */
 	
 	
 	public static final class Gamepad_Gamecube {

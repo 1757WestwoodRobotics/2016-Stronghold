@@ -97,12 +97,12 @@ public class Robot extends IterativeRobot {
 			}
 
 			if (isRunning) {
-				drive.printDriveMessages(gamepad);
-				drive.doDrive(gamepad);
+				/*drive.printDriveMessages(gamepad);
+				drive.doDrive(gamepad);*/
 
 				breach.doBreach(gamepad);
-				climb.doClimb(gamepad);
-				winch.doWinch(gamepad);
+				/*climb.doClimb(gamepad);
+				winch.doWinch(gamepad);*/
 			}
 
 			/** Teleop Commands to Get Over Obstables using button inputs

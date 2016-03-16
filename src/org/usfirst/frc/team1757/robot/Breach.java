@@ -34,7 +34,7 @@ public class Breach {
 	 */
 
 	public void doBreach(Joystick gamepad) {
-		if (gamepad.getRawAxis(Constants.BUTTON_LT) > .2) {
+		/*if (gamepad.getRawAxis(Constants.BUTTON_LT) > .2) {
 			if ((stringPot.get() < Constants.BreachArm.STRINGPOT_MAX) && (stringPot.get() > Constants.BreachArm.STRINGPOT_MIN)) {
 				talon4.set(breachSpeed);
 				isBreaching = true;
@@ -45,18 +45,19 @@ public class Breach {
 				talon4.set(-breachSpeed);
 				isBreaching = true;
 			}
-		}
-		/*
-		    breachSpeed -= 0.01;
+		}*/
+		
+		if (gamepad.getRawAxis(Constants.BUTTON_LT) > .2) {
+			breachSpeed -= 0.01;
 			System.out.println("Decrementing breachSpeed..." + breachSpeed);
-			Timer.delay(0.05);
 			breachSpeed = Math.max(-1, breachSpeed);
+			talon4.set(breachSpeed);
+		} else if (gamepad.getRawAxis(Constants.BUTTON_RT) > .2) {
 			breachSpeed += 0.01;
 			System.out.println("Incrementing breachSpeed..." + breachSpeed);
-			Timer.delay(0.05);
 			breachSpeed = Math.min(1, breachSpeed);
-		 */
-		else {
+			talon4.set(breachSpeed);
+		} else {
 			talon4.set(0);
 			isBreaching = false;
 		}
