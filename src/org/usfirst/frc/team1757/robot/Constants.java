@@ -28,23 +28,32 @@ public class Constants {
 	
 	//DO NOT USE YET!!!
 	public enum GamepadButtons {
-		BUTTON_A(0), BUTTON_B(0), BUTTON_X(0), BUTTON_Y(0);
+		BUTTON_A(), BUTTON_B(), BUTTON_X(), BUTTON_Y();
 		public int port;
-		GamepadButtons(int port) {
-			this.port = port;
-		}
 		public int getPort() {
 			return port;
 		}
-	}
-	
-	public void mapButton() {
-		for (GamepadButtons gamepadButton:GamepadButtons.values()) {
-			
+		public void setPort(int port) {
+			this.port = port;
 		}
 	}
 	
-	
+	public void mapButton(GamepadTypes gamepadType) {
+		switch (GamepadType) {
+			case Logitech_DualACtion:
+				for (GamepadButtons gamepadButton:GamepadButtons.values()) {
+					int buttonPort =  	//HASHMAP??
+					gamepadButton.setPort(buttonPort);
+				}
+				break;
+			case Logitech_F310:
+				break;
+			case Xbox360:
+				break;
+			case Gamecube:
+				break;
+		}
+	}
 	
 	public static void setConstants(GamepadTypes type) {
 		if (type == GamepadTypes.Logitech_DualAction) {
@@ -214,10 +223,13 @@ public class Constants {
 		BUTTON_START = 10, BUTTON_LS = 11, BUTTON_RS = 12,
 		AXIS_X = 0, AXIS_Y = 1, AXIS_RSX = 2, AXIS_RSY = 3;
 		
-		public static void buttonMapping() {
-			
+		public static mapButtons() {
+			HashMap<GamepadButtons, Integer> Logitech_DualAction_Buttons = new HashMap<GamepadButtons, Integer>(GamepadButtons.class);
+			for ()
 		}
 	}
+	
+	
 	
 	public static final class Gamepad_Gamecube {
 		private Gamepad_Gamecube() {}
