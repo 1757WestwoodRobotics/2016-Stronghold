@@ -59,7 +59,6 @@ public class PIDController implements PIDInterface, LiveWindowSendable, Controll
   private double m_D; // factor for "derivative" control
   private double m_F; // factor for feedforward term
   private double m_drive;
-  private boolean m_invert;
   private double m_maximumOutput = 1.0; // |maximum output|
   private double m_minimumOutput = -1.0; // |minimum output|
   private double m_maximumInput = 0.0; // maximum input - limit setpoint to this
@@ -355,24 +354,10 @@ private boolean m_usingPercentTolerance;
           m_bufTotal -= m_buf.pop();
         }
       }
-      //TODO: REMOVE This shouldn't be used to controll invert 
-      /*
-      if (m_invert == true){
-    	  pidOutput.pidWrite(-result - m_drive);
-    	  SmartDashboard.putNumber("result invert", result);
-    	  SmartDashboard.putNumber("result plus drive invert", result+m_drive);
-    	 
-      }
-      else {*/
     	  pidOutput.pidWrite(result + m_drive);
     	  SmartDashboard.putNumber("result", result);
     	  SmartDashboard.putNumber("result plus drive ", result+m_drive);
- // }
     }
-  }
-  public void setInverted(boolean inverted){
-	  m_invert = inverted;
-	  
   }
   public void setDrive(double speed){
 	  m_drive = speed;

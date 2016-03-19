@@ -56,7 +56,6 @@ public class Drive {
 		
 		drive = new RobotDrive(leftTeam, rightTeam);
 		drive.setSafetyEnabled(false);
-		rightTeam.setInverted(true);
 	}
 
 	public enum driveTypes {
@@ -86,7 +85,7 @@ public class Drive {
 
 	public void doTankDrive(Joystick gamepad) {
 		
-		drive.tankDrive(gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY, -gamepad.getRawAxis(Constants.AXIS_RSY)*Constants.SENSITIVITY);
+		drive.tankDrive(gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY, gamepad.getRawAxis(Constants.AXIS_RSY)*Constants.SENSITIVITY);
 	}
 	
 	public void doArcadeDrive(Joystick gamepad) {
@@ -96,11 +95,11 @@ public class Drive {
 		double rightStick = 0;
 		double leftStick = 0;
 		if (gamepad.getRawAxis(Constants.AXIS_RSX)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_RSX)<-Constants.DEADZONE ) {
-			rightStick = -gamepad.getRawAxis(Constants.AXIS_RSX)*Constants.SENSITIVITY;
+			rightStick = gamepad.getRawAxis(Constants.AXIS_RSX)*Constants.SENSITIVITY;
 			
 		}
 		if (gamepad.getRawAxis(Constants.AXIS_Y)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_Y)<-Constants.DEADZONE ) {
-			leftStick = -gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY;
+			leftStick = gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY;
 			
 		}
 		drive.arcadeDrive(rightStick, leftStick);
@@ -109,42 +108,34 @@ public class Drive {
 	
 	public void doSimpleArcadeDrive(Joystick gamepad) {
 		leftTeam.set(gamepad.getY());
-		rightTeam.set(-gamepad.getY());
+		rightTeam.set(gamepad.getY());
 		
-		leftTeam.set(-gamepad.getRawAxis(Constants.AXIS_RSX));
+		leftTeam.set(gamepad.getRawAxis(Constants.AXIS_RSX));
 		rightTeam.set(gamepad.getRawAxis(Constants.AXIS_RSX));
 	}
 	
 	public void doSimpleDrive(Joystick gamepad) {
 		frontLeftMotor.set(gamepad.getY());
 		backLeftMotor.set(gamepad.getY());
-		frontRightMotor.set(-gamepad.getY());
-		backRightMotor.set(-gamepad.getY());
+		frontRightMotor.set(gamepad.getY());
+		backRightMotor.set(gamepad.getY());
 	}
 	
 	public void doPIDArcadeDrive(Joystick gamepad) {
-		pidLeft.setInverted(true);
-		pidRight.setDrive(-gamepad.getY()*Constants.SENSITIVITY);
+		pidRight.setDrive(gamepad.getY()*Constants.SENSITIVITY);
 		pidLeft.setDrive(gamepad.getY()*Constants.SENSITIVITY);
-		
-		//TODO Utilize wrapper implementation of deadzone
-		if (gamepad.getRawAxis(Constants.AXIS_RSX) > .1) {
-			setpoint += gamepad.getRawAxis(3)*Constants.PID_.turnConstant;
+		if (gamepad.getRawAxis(Constants.AXIS_RSX) > .1 || gamepad.getRawAxis(Constants.AXIS_RSX) < -.1) {
+			setpoint += gamepad.getRawAxis(Constants.AXIS_RSX)*Constants.PID_.turnConstant;
 			pidRight.setSetpoint(setpoint);
 			pidLeft.setSetpoint(setpoint);
 		}
 		
-		if (gamepad.getRawAxis(Constants.AXIS_RSX) < -.1) {
-			setpoint += gamepad.getRawAxis(3)*Constants.PID_.turnConstant;
-			pidRight.setSetpoint(setpoint);
-			pidLeft.setSetpoint(setpoint);
-		}
+		
 	}
 	
 	public void resetPIDArcadeDrive(){
 		gyrometer.reset();
 		setpoint = 0;
-		//TODO: not necessary fuck
 		pidLeft.setSetpoint(0);
 		pidRight.setSetpoint(0);
 		
@@ -153,7 +144,7 @@ public class Drive {
 	public void doAutoDrive(double speed, double time) {
 		setpoint = 0;
 		System.out.println("starting AutoDrive");
-		pidRight.setDrive(-speed);
+		pidRight.setDrive(speed);
 		pidLeft.setDrive(speed);
 		Timer.delay(time);
 		pidRight.setDrive(0);

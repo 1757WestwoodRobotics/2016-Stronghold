@@ -11,7 +11,7 @@ public class Constants {
 	private Constants(){}
 	
 	public static int PORT;
-	public static float DEADZONE, INVERTED, TRIGGERZONE, SENSITIVITY;
+	public static float DEADZONE, TRIGGERZONE, SENSITIVITY;
 	public static String MODE;
 			
 	public static int 
@@ -59,7 +59,6 @@ public class Constants {
 		if (type == GamepadTypes.Logitech_DualAction) {
 			PORT = Constants.Gamepad_LogitechDual.PORT;
 			DEADZONE = Constants.Gamepad_LogitechDual.DEADZONE;
-			INVERTED = Constants.Gamepad_LogitechDual.INVERTED;
 			TRIGGERZONE = Constants.Gamepad_LogitechDual.TRIGGERZONE;
 			SENSITIVITY = Constants.Gamepad_LogitechDual.SENSITIVITY;
 			MODE = Constants.Gamepad_LogitechDual.MODE;
@@ -84,7 +83,6 @@ public class Constants {
 		else if (type == GamepadTypes.Logitech_F310) {
 			PORT = Constants.Gamepad_LogitechF310.PORT;
 			DEADZONE = Constants.Gamepad_LogitechF310.DEADZONE;
-			INVERTED = Constants.Gamepad_LogitechF310.INVERTED;
 			TRIGGERZONE = Constants.Gamepad_LogitechF310.TRIGGERZONE;
 			SENSITIVITY = Constants.Gamepad_LogitechF310.SENSITIVITY;
 			MODE = Constants.Gamepad_LogitechF310.MODE;
@@ -109,7 +107,6 @@ public class Constants {
 		else if (type == GamepadTypes.Gamecube) {
 			PORT = Constants.Gamepad_Gamecube.PORT;
 			DEADZONE = Constants.Gamepad_Gamecube.DEADZONE;
-			INVERTED = Constants.Gamepad_Gamecube.INVERTED;
 			TRIGGERZONE = Constants.Gamepad_Gamecube.TRIGGERZONE;
 			SENSITIVITY = Constants.Gamepad_Gamecube.SENSITIVITY;
 			MODE = Constants.Gamepad_Gamecube.MODE;
@@ -134,7 +131,6 @@ public class Constants {
 		else if (type == GamepadTypes.Xbox360) {
 			PORT = Constants.Gamepad_Xbox360.PORT;
 			DEADZONE = Constants.Gamepad_Xbox360.DEADZONE;
-			INVERTED = Constants.Gamepad_Xbox360.INVERTED;
 			TRIGGERZONE = Constants.Gamepad_Xbox360.TRIGGERZONE;
 			SENSITIVITY = Constants.Gamepad_Xbox360.SENSITIVITY;
 			MODE = Constants.Gamepad_Xbox360.MODE;
@@ -214,7 +210,7 @@ public class Constants {
 		private Gamepad_LogitechDual(){}
 		
 		public static final int PORT = 0;
-		public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.8f;
+		public static final float DEADZONE = 0.08f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.8f;
 		public static final String MODE = "DUALACTION";
 				
 		public static final int 
@@ -243,7 +239,7 @@ public class Constants {
 		private Gamepad_Gamecube() {}
 		
 		public static final int PORT = 1;
-		public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.8f;
+		public static final float DEADZONE = 0.08f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.8f;
 		public static final String MODE = "GAMECUBE";
 		
 		public static final int
@@ -259,7 +255,7 @@ public class Constants {
 	public static final class Gamepad_LogitechF310 {
 		private Gamepad_LogitechF310(){}
         public static final int PORT = 1;
-        public static final float DEADZONE = 0.08f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.8f;
+        public static final float DEADZONE = 0.08f, TRIGGERZONE = 0.0f, SENSITIVITY = 0.8f;
         public static final String MODE = "F310";
 
     	// Constant variables for the button codes on the F310 gamepad
@@ -291,7 +287,7 @@ public class Constants {
 		private Gamepad_Xbox360() {}
 		
 		public static final int PORT = 1;
-		public static final float DEADZONE = 0.05f, INVERTED = 0.0f, TRIGGERZONE = 0.0f, SENSITIVITY = 1.0f;
+		public static final float DEADZONE = 0.08f, TRIGGERZONE = 0.0f, SENSITIVITY = 1.0f;
 		public static final String MODE = "Xbox360";
 		
 		public static final int

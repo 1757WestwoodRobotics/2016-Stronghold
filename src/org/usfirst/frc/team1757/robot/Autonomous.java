@@ -1,13 +1,19 @@
 package org.usfirst.frc.team1757.robot;
 
 public class Autonomous {
+	private static boolean isRunning = false;
 
 	public static void printAutoMessages() {
 		//TODO: InComplete
 	}
 	public static void crossLowBar(Drive autoDrive) {
-		autoDrive.doAutoDrive(.3, 2);
-		System.out.println("crossing Low Bar");
+		if(!isRunning){
+			autoDrive.doAutoDrive(.3, 2);
+			System.out.println("crossing Low Bar");
+			isRunning = true;
+		}
+		
+		
 	}
 	public static void crossRockWall(Drive autoDrive) {
 		//TODO: Add motor instructions
