@@ -1,8 +1,10 @@
 
 package org.usfirst.frc.team1757.robot;
 
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -29,7 +31,7 @@ public class Robot extends IterativeRobot {
 
 	public void robotInit() {
 		isRunning = true;
-		gamepad = new Joystick(0);
+		gamepad = new Joystick(1);
 /*
 
 		winch = new Winch(0.0, false, Winch.winchTypes.DirectWinch);
@@ -41,7 +43,6 @@ public class Robot extends IterativeRobot {
 		drive = new Drive(0.0, false, Drive.driveTypes.ArcadeDrive);
 
 		Constants.setConstants(Constants .GamepadTypes.Xbox360);
-
 	}
 
 	public void autonomousInit() {
@@ -53,35 +54,43 @@ public class Robot extends IterativeRobot {
 	}
 	public void autonomousPeriodic() {
 		Autonomous.crossLowBar(drive);
+		SmartDashboard.putNumber("PID drive right", drive.pidRight.get());
+		SmartDashboard.putNumber("PID drive left", drive.pidLeft.get());
+		SmartDashboard.putNumber("Front right motor", Drive.frontRightMotor.get());
+		SmartDashboard.putNumber("Front left motor", Drive.frontLeftMotor.get());
+		SmartDashboard.putNumber("back right motor", Drive.backRightMotor.get());
+		SmartDashboard.putNumber("back left motor", Drive.backLeftMotor.get());
 	}
 	public void teleopInit() {
 		isRunning = true;
-		drive.setDriveType(Drive.driveTypes.ArcadeDrive);
+		drive.setDriveType(Drive.driveTypes.SimpleTankDrive);
 	}
 	public void teleopPeriodic() {
 		while(isEnabled() && isOperatorControl()) {
 			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
 			SmartDashboard.putString("DriveType", drive.driveType.toString());
-			//drive.doPIDArcadeDrive(gamepad);
-//Change these to bindings
+//TODO: Change these to bindings
 			if (gamepad.getRawButton(Constants.BUTTON_B)) {
-				if (drive.driveType == Drive.driveTypes.ArcadeDrive) {
+				if (drive.driveType == Drive.driveTypes.PIDArcadeDrive) {
+					drive.driveType = Drive.driveTypes.PIDDrive;
+					System.out.println("PIDDrive in use");
+				} else if (drive.driveType == Drive.driveTypes.PIDDrive) {
 					drive.driveType = Drive.driveTypes.PIDArcadeDrive;
-				} else if (drive.driveType == Drive.driveTypes.PIDArcadeDrive) {
-					drive.driveType = Drive.driveTypes.ArcadeDrive;
+					System.out.println("PIDArcade Drive in use");
 				} else {
-					drive.driveType = Drive.driveTypes.ArcadeDrive;
+					drive.driveType = Drive.driveTypes.PIDArcadeDrive;
 				}
+				//TODO: Fix this so its not janky
+				Timer.delay(.5);
 			}
 			if (gamepad.getRawButton(Constants.BUTTON_X)){
 				drive.resetPIDArcadeDrive();
 			}
-
 			if (isRunning) {
-				/*drive.printDriveMessages(gamepad);
-				drive.doDrive(gamepad);*/
+				drive.printDriveMessages(gamepad);
+				drive.doDrive(gamepad);
 
-				breach.doBreach(gamepad);
+//				breach.doBreach(gamepad);
 				/*climb.doClimb(gamepad);
 				winch.doWinch(gamepad);*/
 			}

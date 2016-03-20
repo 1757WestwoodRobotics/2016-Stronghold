@@ -1,8 +1,10 @@
 package org.usfirst.frc.team1757.robot;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,6 +21,7 @@ public class Drive {
     static CANTalon frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor;
     PIDController pidRight, pidLeft;
     CANTeamDrive leftTeam, rightTeam, pidTeam;
+    PseudoPIDOutput leftOut, rightOut;
 
     double setpoint, initialTurn;
     
@@ -42,24 +45,25 @@ public class Drive {
 		frontRightMotor.enableBrakeMode(false); 
 		backRightMotor.enableBrakeMode(false);
 		
-		leftTeam = new CANTeamDrive(new CANTalon[] {frontLeftMotor, backLeftMotor});
-		rightTeam = new CANTeamDrive(new CANTalon[] {frontRightMotor, backRightMotor});
-			
-		//leftTeam = new CANTeamDrive(new CANTalon[] {frontLeftMotor}); no grindy
-		//rightTeam= new CANTeamDrive(new CANTalon[] {frontRightMotor});
+		leftTeam = new CANTeamDrive(frontLeftMotor, backLeftMotor);
+		rightTeam = new CANTeamDrive(frontRightMotor, backRightMotor);
+		drive = new RobotDrive(leftTeam, rightTeam);
+		drive.setSafetyEnabled(false);
+		leftTeam.setInverted(false);
+		rightTeam.setInverted(true);
 		
 		gyrometer = new ADXRS450_Gyro();
 		gyrometer.reset();
 
-		pidRight = new PIDController(driveSpeed, Constants.PID_.Kp, Constants.PID_.Ki,Constants.PID_.Kd, Constants.PID_.Kf, gyrometer, rightTeam);
-		pidLeft = new PIDController(driveSpeed, Constants.PID_.Kp, Constants.PID_.Ki,Constants.PID_.Kd, Constants.PID_.Kf, gyrometer, leftTeam);
+		leftOut = new PseudoPIDOutput();
+		rightOut = new PseudoPIDOutput();
 		
-		drive = new RobotDrive(leftTeam, rightTeam);
-		drive.setSafetyEnabled(false);
+		pidRight = new PIDController(Constants.PID_.Kp, Constants.PID_.Ki,Constants.PID_.Kd, Constants.PID_.Kf, gyrometer, rightOut);
+		pidLeft = new PIDController( Constants.PID_.Kp, Constants.PID_.Ki,Constants.PID_.Kd, Constants.PID_.Kf, gyrometer, leftOut);
 	}
 
 	public enum driveTypes {
-		ArcadeDrive, TankDrive, PIDArcadeDrive, SimpleDrive, SimpleArcadeDrive, AutonomousDrive;
+		ArcadeDrive, TankDrive, PIDArcadeDrive, PIDDrive, SimpleDrive, SimpleTankDrive, AutonomousDrive;
 	}
 	
 	public void setDriveType(driveTypes driveType) {
@@ -67,10 +71,13 @@ public class Drive {
 	}
 
 	public void printDriveMessages(Joystick gamepad) {
-		SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(Constants.AXIS_Y)*0.5);
-		SmartDashboard.putNumber("Right Axis", gamepad.getRawAxis(Constants.AXIS_RSY)*0.5);
-		//SmartDashboard.putString("DriveType", this.driveType.toString());
+		SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(Constants.AXIS_Y));
+		SmartDashboard.putNumber("Right Axis", gamepad.getRawAxis(Constants.AXIS_RSY));
 		SmartDashboard.putBoolean("isDriving?", isDriving);
+		SmartDashboard.putNumber("left Team", leftTeam.get());
+		SmartDashboard.putNumber("right Team", rightTeam.get());
+		System.out.println("left Team " + leftTeam.get());
+		System.out.println("right Team" + rightTeam.get());
 		SmartDashboard.putData("pidLeft", pidLeft);
 		SmartDashboard.putData("pidRight", pidRight);
 		SmartDashboard.putData("Gyro", gyrometer);
@@ -106,12 +113,23 @@ public class Drive {
 		
 	}
 	
-	public void doSimpleArcadeDrive(Joystick gamepad) {
-		leftTeam.set(gamepad.getY());
-		rightTeam.set(gamepad.getY());
+	public void doSimpleTankDrive(Joystick gamepad) {
+		if (gamepad.getRawAxis(Constants.AXIS_RSX)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_RSY)<-Constants.DEADZONE ) {
+			rightTeam.set(gamepad.getRawAxis(Constants.AXIS_RSY));
+			
+		}
+		else {
+			rightTeam.set(0);
+		}
+		if (gamepad.getRawAxis(Constants.AXIS_Y)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_Y)<-Constants.DEADZONE ) {
+			leftTeam.set(gamepad.getY());
+			
+		}
+		else{
+			leftTeam.set(0);
+		}
 		
-		leftTeam.set(gamepad.getRawAxis(Constants.AXIS_RSX));
-		rightTeam.set(gamepad.getRawAxis(Constants.AXIS_RSX));
+		
 	}
 	
 	public void doSimpleDrive(Joystick gamepad) {
@@ -120,17 +138,34 @@ public class Drive {
 		frontRightMotor.set(gamepad.getY());
 		backRightMotor.set(gamepad.getY());
 	}
+	public void doPIDDrive(){
+		pidRight.setSetpoint(setpoint);
+		pidLeft.setSetpoint(setpoint);
+		rightTeam.set(rightOut.getOutput()); //TODO: INVERSION!!! Notfication
+		leftTeam.set(-leftOut.getOutput());
+	}
 	
-	public void doPIDArcadeDrive(Joystick gamepad) {
-		pidRight.setDrive(gamepad.getY()*Constants.SENSITIVITY);
-		pidLeft.setDrive(gamepad.getY()*Constants.SENSITIVITY);
+	public void doPIDArcadeDrive(Joystick gamepad) {//TODO: Only settting while axis input
+		if (gamepad.getRawAxis(Constants.AXIS_RSX)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_RSY)<-Constants.DEADZONE ) {
+			rightTeam.set(rightOut.getOutput()+gamepad.getY()*Constants.SENSITIVITY);
+		}
+		else {
+			rightTeam.set(0);
+		}
+		if (gamepad.getRawAxis(Constants.AXIS_Y)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_Y)<-Constants.DEADZONE ) {
+			leftTeam.set(-leftOut.getOutput()+gamepad.getY()*Constants.SENSITIVITY); //TODO: INVERSION ALERT
+			//
+		}
+		else{
+			leftTeam.set(0);
+		}
+		
+		
 		if (gamepad.getRawAxis(Constants.AXIS_RSX) > .1 || gamepad.getRawAxis(Constants.AXIS_RSX) < -.1) {
 			setpoint += gamepad.getRawAxis(Constants.AXIS_RSX)*Constants.PID_.turnConstant;
 			pidRight.setSetpoint(setpoint);
 			pidLeft.setSetpoint(setpoint);
 		}
-		
-		
 	}
 	
 	public void resetPIDArcadeDrive(){
@@ -138,17 +173,16 @@ public class Drive {
 		setpoint = 0;
 		pidLeft.setSetpoint(0);
 		pidRight.setSetpoint(0);
-		
 	}
 	
 	public void doAutoDrive(double speed, double time) {
 		setpoint = 0;
 		System.out.println("starting AutoDrive");
-		pidRight.setDrive(speed);
-		pidLeft.setDrive(speed);
+		leftTeam.set(speed+leftOut.getOutput());
+		rightTeam.set(speed+rightOut.getOutput());
 		Timer.delay(time);
-		pidRight.setDrive(0);
-		pidLeft.setDrive(0);
+		rightTeam.set(0);
+		leftTeam.set(0);
 	}
 
 	
@@ -165,11 +199,15 @@ public class Drive {
 			pidRight.enable();
 			doPIDArcadeDrive(gamepad); 
 			break;
+		case PIDDrive:
+			pidLeft.enable();
+			pidRight.enable();
+			doPIDDrive();
 		case SimpleDrive:
 			doSimpleDrive(gamepad);
 			break;
-		case SimpleArcadeDrive:
-			doSimpleArcadeDrive(gamepad);
+		case SimpleTankDrive:
+			doSimpleTankDrive(gamepad);
 			break;
 		default: System.out.println("Drive type not selected");
 			break; 

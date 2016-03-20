@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.CANSpeedController;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -31,7 +32,7 @@ public class PIDWinch extends WinchBase {
 		super(motor);
 		Potentiometer stringPot = new AnalogPotentiometer(0, 360, 0);
 		m_pidSource = stringPot;
-		m_PIDController = new PIDController(0, .4, 0.0, 0.0, 0.0, m_pidSource, m_pidOutput);
+		m_PIDController = new PIDController(.4, 0.0, 0.0, 0.0, m_pidSource, m_pidOutput);
 	}
 
     /**
@@ -43,7 +44,7 @@ public class PIDWinch extends WinchBase {
 		super(motorLeft, motorRight);
 		Potentiometer stringPot = new AnalogPotentiometer(0, 360, 0);
 		m_pidSource = stringPot;
-		m_PIDController = new PIDController(0, .4, 0.0, 0.0, 0.0, m_pidSource, m_pidOutput);
+		m_PIDController = new PIDController(.4, 0.0, 0.0, 0.0, m_pidSource, m_pidOutput);
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class PIDWinch extends WinchBase {
 	 */
 	public PIDWinch(CANSpeedController motor, PIDSource pidSource) {
 		super(motor);
-		m_PIDController = new PIDController(0, .4, 0.0, 0.0, 0.0, pidSource, m_pidOutput);
+		m_PIDController = new PIDController(.4, 0.0, 0.0, 0.0, pidSource, m_pidOutput);
 	}
 
 	/**
@@ -64,7 +65,7 @@ public class PIDWinch extends WinchBase {
 	 */
 	public PIDWinch(CANSpeedController motorLeft, CANSpeedController motorRight, PIDSource pidSource) {
 		super(motorLeft, motorRight);
-		m_PIDController = new PIDController(0, .4, 0.0, 0.0, 0.0, pidSource, m_pidOutput);
+		m_PIDController = new PIDController(.4, 0.0, 0.0, 0.0, pidSource, m_pidOutput);
 	}
 	
 	/**
@@ -77,7 +78,7 @@ public class PIDWinch extends WinchBase {
 		super(motorLeft, motorRight);
 		Potentiometer stringPot = new AnalogPotentiometer(0, 360, 0);
 		m_pidSource = stringPot;
-		m_PIDController = new PIDController(0, .4, 0.0, 0.0, 0.0, m_pidSource, m_pidOutput);
+		m_PIDController = new PIDController(.4, 0.0, 0.0, 0.0, m_pidSource, m_pidOutput);
 	}
 	
 	/**
@@ -93,7 +94,7 @@ public class PIDWinch extends WinchBase {
 		super(motorLeft, motorRight);
 		Potentiometer stringPot = new AnalogPotentiometer(0, 360, 0);
 		m_pidSource = stringPot;
-		m_PIDController = new PIDController(0, kP, kI, kI, kD, m_pidSource, m_pidOutput);
+		m_PIDController = new PIDController(kP, kI, kI, kD, m_pidSource, m_pidOutput);
 	}
 	
 	@Override

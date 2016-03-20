@@ -1,8 +1,17 @@
 package org.usfirst.frc.team1757.robot;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.Vector;
+
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.CANSpeedController;
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.tables.ITable;
 /**
  * 
@@ -11,7 +20,8 @@ import edu.wpi.first.wpilibj.tables.ITable;
  */
 
 public class CANTeamDrive implements CANSpeedController, PIDOutput {
-	private Vector<CANSpeedController> motorControllers;
+    private final Set<CANSpeedController> motorControllers = new HashSet<>();
+    private float inversion = 1.0f;
     
     /** 
      * Structure: takes an array of CANSpeedControllers as constructor argument and puts them in a vector
@@ -22,15 +32,19 @@ public class CANTeamDrive implements CANSpeedController, PIDOutput {
      * 
      * The constructor must take an array of CANSpeedControllers with at least one member. 
      * */
-    public CANTeamDrive(final CANSpeedController[] controllerArray) {
-        motorControllers = new Vector<CANSpeedController>(controllerArray.length);
-        for (CANSpeedController controller:controllerArray) {
-        	if (!motorControllers.isEmpty()) {
-        		motorControllers.addElement(controller);
-        	} else {
-        		System.out.println("motorControllers is EMPTY!!!");
-        	}
-        }
+    public CANTeamDrive(final Collection<CANSpeedController> controllers) {
+        Objects.requireNonNull(controllers);
+        motorControllers.addAll(controllers);
+    }
+    
+    /**
+     * Create a new SpeedControllerGroup instance.
+     *
+     * @param controllers a varargs list or array of SpeedController objects. May be
+     *                    all the same type, or may be mixed.
+     */
+    public CANTeamDrive(final CANSpeedController... controllers) {
+        this(Arrays.asList(controllers));
     }
     
     /**
@@ -42,25 +56,26 @@ public class CANTeamDrive implements CANSpeedController, PIDOutput {
     	}
     }
     
-
     /**
-     * @param Index of CANSpeedController in CANSpeedController Team
-     * @return get() value for index element in the CANSpeedController Team - value variable on the CANSpeedController controlmode
+     * Invert all PWM values for this SpeedControllerGroup.
+     *
+     * @param inverted whether the PWM values should be inverted or not
+     * @return this SpeedControllerGroup instance
      */
-    public double get(int index) {
-    	return motorControllers.get(index).get();
+    public void setInversion(final boolean isinverted) {
+    	if (isinverted)
+    		inversion = -1.0f;
+    	else
+    		inversion = 1.0f;
     }
     
     /**
      * @return Average get() value for all elements in the CANSpeedController Team - value variable on the CANSpeedController controlmode
      */
     public double get() {
-        double sum = 0, count = 0;
-    	for (CANSpeedController controller:motorControllers) {
-    		sum += controller.get();
-    		count++;
-    	}
-    	return sum/count;
+        return inversion * motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.get()))
+                .orElse(0.0);
     }
     
     /**
@@ -100,15 +115,6 @@ public class CANTeamDrive implements CANSpeedController, PIDOutput {
 	}
 	
 	/**
-	 * @param Numeric index of CANSpeedController vector
-	 * Maximum is vector length -1, minumim is 0
-	 * @return CANSpeedController object instance
-	 */
-	public CANSpeedController getController(int index)	{
-		return motorControllers.get(index);
-	}
-	
-	/**
 	 * @return Integer size of the motor team
 	 */
 	public int getTeamSize() {
@@ -119,7 +125,7 @@ public class CANTeamDrive implements CANSpeedController, PIDOutput {
 	 * @return getInverted() value for the first element of CANSpeedController Team
 	 */
 	public boolean getInverted() {
-		return motorControllers.firstElement().getInverted();
+		return (inversion > 0) ? false : true;
 	}
 	
 	public void setPID(double p, double i, double d) {
@@ -130,17 +136,23 @@ public class CANTeamDrive implements CANSpeedController, PIDOutput {
 
 	@Override
 	public double getP() {
-		return motorControllers.firstElement().getP();
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getP()))
+                .orElse(0.0);
 	}
 
 	@Override
 	public double getI() {
-		return motorControllers.firstElement().getI();
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getI()))
+                .orElse(0.0);
 	}
 
 	@Override
 	public double getD() {
-		return motorControllers.firstElement().getD();
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getD()))
+                .orElse(0.0);
 	}
 
 	@Override
@@ -152,12 +164,16 @@ public class CANTeamDrive implements CANSpeedController, PIDOutput {
 
 	@Override
 	public double getSetpoint() {
-		return motorControllers.firstElement().getSetpoint();
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getSetpoint()))
+                .orElse(0.0);
 	}
 
 	@Override
 	public double getError() {
-		return motorControllers.firstElement().getError();
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getError()))
+                .orElse(0.0);
 	}
 
 	@Override
@@ -169,7 +185,9 @@ public class CANTeamDrive implements CANSpeedController, PIDOutput {
 
 	@Override
 	public boolean isEnabled() {
-		return motorControllers.firstElement().isEnabled();
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.isEnabled()))
+                .orElse(false);
 	}
 
 	@Override
@@ -209,17 +227,23 @@ public class CANTeamDrive implements CANSpeedController, PIDOutput {
 
 	@Override
 	public ITable getTable() {
-		return motorControllers.firstElement().getTable();
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getTable()))
+                .orElse(null);
 	}
 
 	@Override
 	public String getSmartDashboardType() {
-		return motorControllers.firstElement().getSmartDashboardType();
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getSmartDashboardType()))
+                .orElse("Error getting SmartDashboardType");
 	}
 
 	@Override
 	public ControlMode getControlMode() {
-		return motorControllers.firstElement().getControlMode();
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getControlMode()))
+                .orElse(CANTalon.TalonControlMode.PercentVbus);
 	}
 
 	@Override
@@ -249,83 +273,41 @@ public class CANTeamDrive implements CANSpeedController, PIDOutput {
 			controller.setD(d);
 		}
 	}
-
-    public double getBusVoltage(int index) {
-    	return motorControllers.get(index).getBusVoltage();
-    }
     
     public double getBusVoltage() {
-        double sum = 0, count = 0;
-    	for (CANSpeedController controller:motorControllers) {
-    		sum += controller.getBusVoltage();
-    		count++;
-    	}
-    	return sum/count;
-    }
-
-    public double getOutputVoltage(int index) {
-    	return motorControllers.get(index).getOutputVoltage();
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getBusVoltage()))
+                .orElse(0.0);
     }
     
     public double getOutputVoltage() {
-        double sum = 0, count = 0;
-    	for (CANSpeedController controller:motorControllers) {
-    		sum += controller.getOutputVoltage();
-    		count++;
-    	}
-    	return sum/count;
-    }
-
-    public double getOutputCurrent(int index) {
-    	return motorControllers.get(index).getOutputCurrent();
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getOutputVoltage()))
+                .orElse(0.0);
     }
     
     public double getOutputCurrent() {
-        double sum = 0, count = 0;
-    	for (CANSpeedController controller:motorControllers) {
-    		sum += controller.getOutputCurrent();
-    		count++;
-    	}
-    	return sum/count;
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getOutputCurrent()))
+                .orElse(0.0);
     }
 
-    public double getTemperature(int index) {
-    	return motorControllers.get(index).getTemperature();
-    }
-    
     public double getTemperature() {
-        double sum = 0, count = 0;
-    	for (CANSpeedController controller:motorControllers) {
-    		sum += controller.getTemperature();
-    		count++;
-    	}
-    	return sum/count;
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getTemperature()))
+                .orElse(0.0);
     }
 	
-    public double getPosition(int index) {
-    	return motorControllers.get(index).getPosition();
-    }
-    
     public double getPosition() {
-        double sum = 0, count = 0;
-    	for (CANSpeedController controller:motorControllers) {
-    		sum += controller.getPosition();
-    		count++;
-    	}
-    	return sum/count;
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getPosition()))
+                .orElse(0.0);
     }
 	
-    public double getSpeed(int index) {
-    	return motorControllers.get(index).getSpeed();
-    }
-    
     public double getSpeed() {
-        double sum = 0, count = 0;
-    	for (CANSpeedController controller:motorControllers) {
-    		sum += controller.getSpeed();
-    		count++;
-    	}
-    	return sum/count;
+        return motorControllers.stream().findFirst()
+                .flatMap(controller -> Optional.ofNullable(controller.getSpeed()))
+                .orElse(0.0);
     }
 	
     public void setVoltageRampRate(double rampRate) {
