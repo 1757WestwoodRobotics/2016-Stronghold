@@ -21,8 +21,10 @@ public class Robot extends IterativeRobot {
 	boolean isRunning;
 
 	Joystick gamepad;
+	CANTalon canWinch;
 
 	Winch winch; 
+	
 	Breach breach;
 	Climb climb;
 
@@ -32,6 +34,8 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		isRunning = true;
 		gamepad = new Joystick(1);
+		canWinch = new CANTalon(4);
+
 /*
 
 		winch = new Winch(0.0, false, Winch.winchTypes.DirectWinch);
@@ -63,13 +67,15 @@ public class Robot extends IterativeRobot {
 	}
 	public void teleopInit() {
 		isRunning = true;
-		drive.setDriveType(Drive.driveTypes.SimpleTankDrive);
+		drive.setDriveType(Drive.driveTypes.ArcadeDrive);
 	}
 	public void teleopPeriodic() {
 		while(isEnabled() && isOperatorControl()) {
 			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
 			SmartDashboard.putString("DriveType", drive.driveType.toString());
 //TODO: Change these to bindings
+			//TODO: TESTING CODE
+			/*
 			if (gamepad.getRawButton(Constants.BUTTON_B)) {
 				if (drive.driveType == Drive.driveTypes.PIDArcadeDrive) {
 					drive.driveType = Drive.driveTypes.PIDDrive;
@@ -86,6 +92,19 @@ public class Robot extends IterativeRobot {
 			if (gamepad.getRawButton(Constants.BUTTON_X)){
 				drive.resetPIDArcadeDrive();
 			}
+			*/
+	
+			if(gamepad.getRawButton(Constants.BUTTON_LB)){
+				canWinch.set(-.1);
+			}
+			else if(gamepad.getRawButton(Constants.BUTTON_RB)){
+				canWinch.set(.1);
+			}
+			else {
+				canWinch.set(0);
+			}
+			
+			
 			if (isRunning) {
 				drive.printDriveMessages(gamepad);
 				drive.doDrive(gamepad);
