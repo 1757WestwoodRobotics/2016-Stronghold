@@ -21,28 +21,20 @@ public class Robot extends IterativeRobot {
 	boolean isRunning;
 
 	Joystick gamepad;
-	CANTalon canWinch;
 
-	Winch winch; 
-	
+	Winch winch; 	
 	Breach breach;
 	Climb climb;
-
 	Drive drive;
 
 
 	public void robotInit() {
 		isRunning = true;
 		gamepad = new Joystick(1);
-		canWinch = new CANTalon(4);
 
-/*
-
-		winch = new Winch(0.0, false, Winch.winchTypes.DirectWinch);
+		//winch = new Winch(0.0, false, Winch.winchTypes.DirectWinch);
 		breach = new Breach(Constants.BreachArm.ARM_SPEED, false);
 		climb = new Climb(0.0, false);
-		
-*/
 
 		drive = new Drive(0.0, false, Drive.driveTypes.ArcadeDrive);
 

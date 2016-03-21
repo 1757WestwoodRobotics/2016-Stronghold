@@ -175,7 +175,7 @@ public class Constants {
 		private PID_(){}
 	    
 		public static final double
-		Kp = 0.04, Ki = 0.00, Kd = 0.00, Kf = 0, turnConstant = 0.8;
+		Kp = 0.08, Ki = 0.00, Kd = 0.01, Kf = 0, turnConstant = 0.8;
 	    //TODO: Need to adjust D for optimization
 	}
 	
@@ -196,8 +196,12 @@ public class Constants {
 	public static final class BreachArm {
 		private BreachArm(){};
 		public static final double 
-		STRINGPOT_MAX = .56d, STRINGPOT_MIN = .1d, ARM_SPEED = .5d;
+		STRINGPOT_MAX = .56d, STRINGPOT_MIN = .1d, ANGLE_ADJUST = 1,
+		ARM_SPEED = .5d, ARM_LENGTH = 0.0;
+		//TODO Correct for actual length
 		
+		public static final double
+		Kp = .04, Ki = 0.0, Kd = 0.0;
 	}
 	
 	public static final class Camera {
@@ -287,7 +291,7 @@ public class Constants {
 		private Gamepad_Xbox360() {}
 		
 		public static final int PORT = 1;
-		public static final float DEADZONE = 0.2f, TRIGGERZONE = 0.0f, SENSITIVITY = 1.0f;
+		public static final float DEADZONE = 0.3f, TRIGGERZONE = 0.4f, SENSITIVITY = 1.0f;
 		public static final String MODE = "Xbox360";
 		
 		public static final int
