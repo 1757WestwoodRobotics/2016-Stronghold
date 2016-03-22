@@ -1,7 +1,6 @@
 
 package org.usfirst.frc.team1757.robot;
 
-import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -20,8 +19,7 @@ public class Robot extends IterativeRobot {
 
 	boolean isRunning;
 
-	Joystick gamepad;
-
+	Gamepad gamepad;
 	Winch winch; 	
 	Breach breach;
 	Climb climb;
@@ -30,7 +28,7 @@ public class Robot extends IterativeRobot {
 
 	public void robotInit() {
 		isRunning = true;
-		gamepad = new Joystick(1);
+		gamepad = new Gamepad(1, );
 
 		//winch = new Winch(0.0, false, Winch.winchTypes.DirectWinch);
 		breach = new Breach(Constants.BreachArm.ARM_SPEED, false);
@@ -50,6 +48,7 @@ public class Robot extends IterativeRobot {
 	}
 	public void autonomousPeriodic() {
 		Autonomous.crossLowBar(drive);
+		
 		SmartDashboard.putNumber("PID drive right", drive.pidRight.get());
 		SmartDashboard.putNumber("PID drive left", drive.pidLeft.get());
 		SmartDashboard.putNumber("Front right motor", Drive.frontRightMotor.get());
@@ -65,9 +64,9 @@ public class Robot extends IterativeRobot {
 		while(isEnabled() && isOperatorControl()) {
 			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
 			SmartDashboard.putString("DriveType", drive.driveType.toString());
-//TODO: Change these to bindings
+			//TODO: Change these to bindings
 			//TODO: TESTING CODE
-			/*
+			
 			if (gamepad.getRawButton(Constants.BUTTON_B)) {
 				if (drive.driveType == Drive.driveTypes.PIDArcadeDrive) {
 					drive.driveType = Drive.driveTypes.PIDDrive;
@@ -78,30 +77,17 @@ public class Robot extends IterativeRobot {
 				} else {
 					drive.driveType = Drive.driveTypes.PIDArcadeDrive;
 				}
-				//TODO: Fix this so its not janky
 				Timer.delay(.5);
 			}
 			if (gamepad.getRawButton(Constants.BUTTON_X)){
 				drive.resetPIDArcadeDrive();
 			}
-			*/
-	
-			if(gamepad.getRawButton(Constants.BUTTON_LB)){
-				canWinch.set(-.1);
-			}
-			else if(gamepad.getRawButton(Constants.BUTTON_RB)){
-				canWinch.set(.1);
-			}
-			else {
-				canWinch.set(0);
-			}
-			
 			
 			if (isRunning) {
 				drive.printDriveMessages(gamepad);
 				drive.doDrive(gamepad);
-
-//				breach.doBreach(gamepad);
+				breach.doBreach(gamepad);
+				
 				/*climb.doClimb(gamepad);
 				winch.doWinch(gamepad);*/
 			}

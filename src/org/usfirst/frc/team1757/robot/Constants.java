@@ -197,8 +197,8 @@ public class Constants {
 		private BreachArm(){};
 		public static final double 
 		STRINGPOT_MAX = .56d, STRINGPOT_MIN = .1d, ANGLE_ADJUST = 1,
-		ARM_SPEED = .5d, ARM_LENGTH = 0.0;
-		//TODO Correct for actual length
+		ARM_SPEED = .5d, 
+		ARM_LENGTH = 47.5; //Unit is feet (47ft, 6in)
 		
 		public static final double
 		Kp = .04, Ki = 0.0, Kd = 0.0;

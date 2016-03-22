@@ -70,7 +70,7 @@ public class Drive {
 		this.driveType = driveType;
 	}
 
-	public void printDriveMessages(Joystick gamepad) {
+	public void printDriveMessages(Gamepad gamepad) {
 		SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(Constants.AXIS_Y));
 		SmartDashboard.putNumber("Right Axis", gamepad.getRawAxis(Constants.AXIS_RSY));
 		SmartDashboard.putBoolean("isDriving?", isDriving);
@@ -90,30 +90,25 @@ public class Drive {
 	
 	}
 
-	public void doTankDrive(Joystick gamepad) {
+	public void doTankDrive(Gamepad gamepad) {
 		
 		drive.tankDrive(gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY, gamepad.getRawAxis(Constants.AXIS_RSY)*Constants.SENSITIVITY);
 	}
 	
-	public void doArcadeDrive(Joystick gamepad) {
+	public void doArcadeDrive(Gamepad gamepad) {
 		/**
 		 * Calls arcade drive and gives it value of sticks, if the sticks are outside their deadzone
 		 */
 		double rightStick = 0;
 		double leftStick = 0;
-		if (gamepad.getRawAxis(Constants.AXIS_RSX)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_RSX)<-Constants.DEADZONE ) {
-			rightStick = gamepad.getRawAxis(Constants.AXIS_RSX)*Constants.SENSITIVITY;
-			
-		}
-		if (gamepad.getRawAxis(Constants.AXIS_Y)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_Y)<-Constants.DEADZONE ) {
-			leftStick = gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY;
-			
-		}
-		drive.arcadeDrive(rightStick, leftStick);
-		
+
+		rightStick = gamepad.getAdjAxis(Constants.AXIS_RSX);	
+		leftStick = gamepad.getAdjAxis(Constants.AXIS_Y);
+		drive.arcadeDrive(leftStick,rightStick);
+		//TODO Test this make sure arcadeDrive Javadocs isn't fucked
 	}
 	
-	public void doSimpleTankDrive(Joystick gamepad) {
+	public void doSimpleTankDrive(Gamepad gamepad) {
 		if (gamepad.getRawAxis(Constants.AXIS_RSX)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_RSY)<-Constants.DEADZONE ) {
 			rightTeam.set(gamepad.getRawAxis(Constants.AXIS_RSY));
 			
@@ -132,12 +127,13 @@ public class Drive {
 		
 	}
 	
-	public void doSimpleDrive(Joystick gamepad) {
+	public void doSimpleDrive(Gamepad gamepad) {
 		frontLeftMotor.set(gamepad.getY());
 		backLeftMotor.set(gamepad.getY());
 		frontRightMotor.set(gamepad.getY());
 		backRightMotor.set(gamepad.getY());
 	}
+	
 	public void doPIDDrive(){
 		pidRight.setSetpoint(setpoint);
 		pidLeft.setSetpoint(setpoint);
@@ -145,34 +141,20 @@ public class Drive {
 		leftTeam.set(-leftOut.getOutput());
 	}
 	
-	public void doPIDArcadeDrive(Joystick gamepad) {//TODO: Only settting while axis input
-		if (gamepad.getRawAxis(Constants.AXIS_RSX)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_RSY)<-Constants.DEADZONE ) {
-			rightTeam.set(rightOut.getOutput()+gamepad.getY()*Constants.SENSITIVITY);
-		}
-		else {
-			rightTeam.set(0);
-		}
-		if (gamepad.getRawAxis(Constants.AXIS_Y)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_Y)<-Constants.DEADZONE ) {
-			leftTeam.set(-leftOut.getOutput()+gamepad.getY()*Constants.SENSITIVITY); //TODO: INVERSION ALERT
-			//
-		}
-		else{
-			leftTeam.set(0);
-		}
-		
-		
-		if (gamepad.getRawAxis(Constants.AXIS_RSX) > .1 || gamepad.getRawAxis(Constants.AXIS_RSX) < -.1) {
-			setpoint += gamepad.getRawAxis(Constants.AXIS_RSX)*Constants.PID_.turnConstant;
-			pidRight.setSetpoint(setpoint);
-			pidLeft.setSetpoint(setpoint);
-		}
+	public void doPIDArcadeDrive(Gamepad gamepad) {
+		rightTeam.set(rightOut.getOutput()+gamepad.getAdjAxis(Constants.AXIS_Y));
+		leftTeam.set(-leftOut.getOutput()+gamepad.getAdjAxis(Constants.AXIS_Y));
+		gamepad.getTrigger(Constants.BUTTON_LT);
+		setpoint += gamepad.getAdjAxis(Constants.AXIS_RSX)*Constants.PID_.turnConstant;
+		pidRight.setSetpoint(setpoint);
+		pidLeft.setSetpoint(setpoint);	
 	}
 	
 	public void resetPIDArcadeDrive(){
 		gyrometer.reset();
 		setpoint = 0;
-		pidLeft.setSetpoint(0);
-		pidRight.setSetpoint(0);
+		pidLeft.setSetpoint(setpoint);
+		pidRight.setSetpoint(setpoint);
 	}
 	
 	public void doAutoDrive(double speed, double time) {
@@ -184,9 +166,8 @@ public class Drive {
 		rightTeam.set(0);
 		leftTeam.set(0);
 	}
-
 	
-	public void doDrive(Joystick gamepad) {
+	public void doDrive(Gamepad gamepad) {
 		switch (driveType) {
 		case ArcadeDrive: 
 			doArcadeDrive(gamepad); 
