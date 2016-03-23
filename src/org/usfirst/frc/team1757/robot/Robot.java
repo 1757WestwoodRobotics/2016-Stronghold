@@ -4,6 +4,7 @@ package org.usfirst.frc.team1757.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -16,86 +17,107 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 
 public class Robot extends IterativeRobot {
-
-	boolean isRunning;
-
 	Gamepad gamepad;
 	Winch winch; 	
 	Breach breach;
 	Climb climb;
 	Drive drive;
+	Commands commands;
+	Gamepad buttonBox;
+	
+	final String defaultAuto = "Default";
+    final String lowbarAuto = "Cross Low Bar";
+    final String sallyportAuto = "Sally Port Auto";
+    final String rockwallAuto = "Rock Wall Auto";
+    final String moatAuto = "Moat Auto";
+    final String drawbridgeAuto = "Drawbridge Auto";
+    final String portcullisAuto = "Portcullis Auto";
+    String autoSelected;
+    SendableChooser chooser;
 
 
 	public void robotInit() {
-		isRunning = true;
-		gamepad = new Gamepad(1, );
+		gamepad = new Gamepad(1);
 
 		//winch = new Winch(0.0, false, Winch.winchTypes.DirectWinch);
 		breach = new Breach(Constants.BreachArm.ARM_SPEED, false);
-		climb = new Climb(0.0, false);
-
+		//climb = new Climb(0.0, false);
 		drive = new Drive(0.0, false, Drive.driveTypes.ArcadeDrive);
+		buttonBox = new Gamepad(0);
 
-		Constants.setConstants(Constants .GamepadTypes.Xbox360);
+		Constants.setConstants(Constants.GamepadTypes.Xbox360);
+		
+		chooser = new SendableChooser();
+        chooser.addDefault("Default Auto", defaultAuto);
+        chooser.addObject("Low Bar Auto", lowbarAuto);
+        chooser.addObject("Sally Port Auto", sallyportAuto);
+        chooser.addObject("Rock Wall Auto", rockwallAuto);
+        chooser.addObject("Moat Auto", moatAuto);
+        chooser.addObject("Drawbridge Auto", drawbridgeAuto);
+        chooser.addObject("Portcullis Auto", portcullisAuto);
+        SmartDashboard.putData("Auto choices", chooser);
+        
+        commands = new Commands(drive, breach);
+    
 	}
 
 	public void autonomousInit() {
 		System.out.println("AUTO mode has started.");
 		drive.setDriveType(Drive.driveTypes.PIDArcadeDrive); 
-		drive.pidLeft.enable();
-		drive.pidRight.enable();
 		
+		autoSelected = (String) chooser.getSelected();
+//		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
+		System.out.println("Auto selected: " + autoSelected);
+
 	}
+
 	public void autonomousPeriodic() {
-		Autonomous.crossLowBar(drive);
 		
-		SmartDashboard.putNumber("PID drive right", drive.pidRight.get());
-		SmartDashboard.putNumber("PID drive left", drive.pidLeft.get());
-		SmartDashboard.putNumber("Front right motor", Drive.frontRightMotor.get());
-		SmartDashboard.putNumber("Front left motor", Drive.frontLeftMotor.get());
-		SmartDashboard.putNumber("back right motor", Drive.backRightMotor.get());
-		SmartDashboard.putNumber("back left motor", Drive.backLeftMotor.get());
+		//TODO Print messages as necessary
+
+		switch(autoSelected) {
+    	case lowbarAuto:
+    		Autonomous.crossLowBar(drive);  
+            break;
+    	case defaultAuto:
+    		Autonomous.crossLowBar(drive);
+    	default:
+    		System.out.println("No Auto Selected");
+            break;
+    	}
 	}
+
 	public void teleopInit() {
-		isRunning = true;
 		drive.setDriveType(Drive.driveTypes.ArcadeDrive);
 	}
+
 	public void teleopPeriodic() {
 		while(isEnabled() && isOperatorControl()) {
-			SmartDashboard.putBoolean("Robot-isRunning?", isRunning);
-			SmartDashboard.putString("DriveType", drive.driveType.toString());
-			//TODO: Change these to bindings
-			//TODO: TESTING CODE
-			
-			if (gamepad.getRawButton(Constants.BUTTON_B)) {
-				if (drive.driveType == Drive.driveTypes.PIDArcadeDrive) {
-					drive.driveType = Drive.driveTypes.PIDDrive;
-					System.out.println("PIDDrive in use");
-				} else if (drive.driveType == Drive.driveTypes.PIDDrive) {
-					drive.driveType = Drive.driveTypes.PIDArcadeDrive;
-					System.out.println("PIDArcade Drive in use");
-				} else {
-					drive.driveType = Drive.driveTypes.PIDArcadeDrive;
-				}
-				Timer.delay(.5);
-			}
-			if (gamepad.getRawButton(Constants.BUTTON_X)){
-				drive.resetPIDArcadeDrive();
-			}
-			
-			if (isRunning) {
-				drive.printDriveMessages(gamepad);
-				drive.doDrive(gamepad);
-				breach.doBreach(gamepad);
-				
-				/*climb.doClimb(gamepad);
-				winch.doWinch(gamepad);*/
-			}
 
-			/** Teleop Commands to Get Over Obstables using button inputs
-			 * 
+			/**
+			 * Uses both sticks, X, and B
 			 */
-			//TODO: Use Teleop Commands -- runnable so you can cancel it during execution
+			drive.doDrive(gamepad);
+
+			/**
+			 * Uses the triggers
+			 */
+			breach.doBreach(gamepad);
+
+			/**
+			 * Uses the DPAD and Y button
+			 */
+			//climb.doClimb(gamepad);
+
+			/**
+			 * Uses Start, Back, and A
+			 */
+			//winch.doWinch(gamepad);
+			
+			/**
+			 * Uses button 4 for drawbridge, 
+			 **/
+			commands.doCommand(buttonBox);
 		}
 	}
 
@@ -106,4 +128,5 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 
 	}
+
 }

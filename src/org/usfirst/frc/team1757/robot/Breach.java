@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1757.robot;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -30,6 +30,7 @@ public class Breach {
 		this.canBreach = canBreach;
 		this.canBreach.setInverted(false);
 		this.breachType = breachType;
+		//stringPot = new AnalogPotentiometer(0, Constants.BreachArm.FULLRANGE, Constants.BreachArm.OFFSET);
 		stringPot = new AnalogPotentiometer(0);
 		pidOut = new PseudoPIDOutput();
 		breachPID = new PIDController(Constants.BreachArm.Kp, Constants.BreachArm.Ki, Constants.BreachArm.Kd, stringPot, pidOut);
@@ -66,16 +67,17 @@ public class Breach {
 	public void setBreachType(breachTypes breachType) {
 		this.breachType = breachType;
 	}
+	
 
-	public void doRawBreach(Joystick gamepad) {
+	public void doRawBreach(Gamepad gamepad) {
 		enablePID(false);
-		if (gamepad.getRawAxis(Constants.BUTTON_LT) > Constants.TRIGGERZONE) {
+		if (gamepad.getTrigger(Constants.BUTTON_LT)) {
 			if ((stringPot.get() < Constants.BreachArm.STRINGPOT_MAX) && (stringPot.get() > Constants.BreachArm.STRINGPOT_MIN)) {
 				canBreach.set(-breachSpeed);
 				isBreaching = true;
 			}
 			
-		} else if (gamepad.getRawAxis(Constants.BUTTON_RT) > Constants.TRIGGERZONE) {
+		} else if (gamepad.getTrigger(Constants.BUTTON_RT)) {
 			if ((stringPot.get() < Constants.BreachArm.STRINGPOT_MAX) && (stringPot.get() > Constants.BreachArm.STRINGPOT_MIN)) {
 				canBreach.set(breachSpeed);
 				isBreaching = true;
@@ -91,16 +93,16 @@ public class Breach {
 		SmartDashboard.putNumber("String Pot", stringPot.get());
 	}
 	
-	public void doPIDBreach(Joystick gamepad) {
+	public void doPIDBreach(Gamepad gamepad) {
 		enablePID(true);
-		if (gamepad.getRawAxis(Constants.BUTTON_LT) > Constants.TRIGGERZONE) {
+		if (gamepad.getTrigger(Constants.BUTTON_LT)) {
 			if ((stringPot.get() < Constants.BreachArm.STRINGPOT_MAX) && (stringPot.get() > Constants.BreachArm.STRINGPOT_MIN)) {
 				angleSetpoint += Constants.BreachArm.ANGLE_ADJUST;
 				breachPID.setSetpoint(angleSetpoint);
 				isBreaching = true;
 			}
 			
-		} else if (gamepad.getRawAxis(Constants.BUTTON_RT) > Constants.TRIGGERZONE) {
+		} else if (gamepad.getTrigger(Constants.BUTTON_RT)) {
 			if ((stringPot.get() < Constants.BreachArm.STRINGPOT_MAX) && (stringPot.get() > Constants.BreachArm.STRINGPOT_MIN)) {
 				angleSetpoint += Constants.BreachArm.ANGLE_ADJUST;
 				breachPID.setSetpoint(angleSetpoint);
@@ -124,7 +126,7 @@ public class Breach {
 			breachPID.disable();
 	}
 	
-	public void doBreach(Joystick gamepad) {
+	public void doBreach(Gamepad gamepad) {
 		switch (breachType) {
 		case rawBreach: 
 			doRawBreach(gamepad); 

@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class Gamepad extends Joystick {
 
-	private static final double SENSITIVTY = 0;
 	private double triggerZone;
 	private double deadZone;
 	private double sensitivity;
@@ -40,6 +39,13 @@ public class Gamepad extends Joystick {
 			return false;
 	}
 	
+	public boolean getTrigger(int triggerAxis, double tZone) {
+		if (getRawAxis(triggerAxis) > tZone)
+			return true;
+		else
+			return false;
+	}
+	
 	public double getDeadAxis(int axis) {
 		if (getRawAxis(axis)>Constants.DEADZONE || getRawAxis(axis)<-Constants.DEADZONE) {
 			return getRawAxis(axis);
@@ -54,9 +60,11 @@ public class Gamepad extends Joystick {
 	 */
 	public double getAdjAxis(int axis) {
 		if (getRawAxis(axis)>Constants.DEADZONE || getRawAxis(axis)<-Constants.DEADZONE) {
-			return getRawAxis(axis)*SENSITIVTY;
+			return getRawAxis(axis)*Constants.SENSITIVITY;
+			
 		}
 		else
 			return 0;
+		
 	}
 }

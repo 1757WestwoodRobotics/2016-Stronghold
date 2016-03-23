@@ -159,6 +159,13 @@ public class Constants {
 		
 	}
 	
+	public static final class Autonomous {
+		private Autonomous(){}
+		public static final double
+		LOWBARSPEED = .2, LOWBARTIME = 4,
+		ROCKWALLSPEED = 1, ROCKWALLTIME = 3;
+	}
+	
 	public static final class CAN_ {
 		private CAN_(){}
 		
@@ -175,7 +182,7 @@ public class Constants {
 		private PID_(){}
 	    
 		public static final double
-		Kp = 0.08, Ki = 0.00, Kd = 0.01, Kf = 0, turnConstant = 0.8;
+		Kp = 0.08, Ki = 0.00, Kd = 0.01, Kf = 0, turnConstant = 0.2;
 	    //TODO: Need to adjust D for optimization
 	}
 	
@@ -197,6 +204,7 @@ public class Constants {
 		private BreachArm(){};
 		public static final double 
 		STRINGPOT_MAX = .56d, STRINGPOT_MIN = .1d, ANGLE_ADJUST = 1,
+		FULLRANGE = 0, OFFSET = 0, //TODO Calibrate POT
 		ARM_SPEED = .5d, 
 		ARM_LENGTH = 47.5; //Unit is feet (47ft, 6in)
 		

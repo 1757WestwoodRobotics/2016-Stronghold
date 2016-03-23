@@ -69,6 +69,21 @@ public class Drive {
 	public void setDriveType(driveTypes driveType) {
 		this.driveType = driveType;
 	}
+	
+	public void cycleType() {
+		if (driveType == Drive.driveTypes.PIDArcadeDrive) {
+			driveType = Drive.driveTypes.ArcadeDrive;
+			System.out.println("ArcadeDrive in use");
+			Timer.delay(1);
+		} else if (driveType == Drive.driveTypes.ArcadeDrive) {
+			driveType = Drive.driveTypes.PIDArcadeDrive;
+			System.out.println("PIDArcade Drive in use");
+			Timer.delay(1);
+		} else {
+			driveType = Drive.driveTypes.ArcadeDrive;
+			Timer.delay(1);
+		}
+	}
 
 	public void printDriveMessages(Gamepad gamepad) {
 		SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(Constants.AXIS_Y));
@@ -76,12 +91,11 @@ public class Drive {
 		SmartDashboard.putBoolean("isDriving?", isDriving);
 		SmartDashboard.putNumber("left Team", leftTeam.get());
 		SmartDashboard.putNumber("right Team", rightTeam.get());
-		System.out.println("left Team " + leftTeam.get());
-		System.out.println("right Team" + rightTeam.get());
 		SmartDashboard.putData("pidLeft", pidLeft);
 		SmartDashboard.putData("pidRight", pidRight);
 		SmartDashboard.putData("Gyro", gyrometer);
 		SmartDashboard.putNumber("Angle", gyrometer.getAngle());
+		SmartDashboard.putString("DriveType", driveType.toString());
 		
 		/*SmartDashboard.putNumber("talon0-motorCurrent", talon0.getOutputCurrent());
 		SmartDashboard.putNumber("talon1-motorCurrent", talon1.getOutputCurrent());
@@ -91,8 +105,7 @@ public class Drive {
 	}
 
 	public void doTankDrive(Gamepad gamepad) {
-		
-		drive.tankDrive(gamepad.getRawAxis(Constants.AXIS_Y)*Constants.SENSITIVITY, gamepad.getRawAxis(Constants.AXIS_RSY)*Constants.SENSITIVITY);
+		drive.tankDrive(gamepad.getAdjAxis(Constants.AXIS_Y), gamepad.getAdjAxis(Constants.AXIS_RSY));
 	}
 	
 	public void doArcadeDrive(Gamepad gamepad) {
@@ -104,27 +117,13 @@ public class Drive {
 
 		rightStick = gamepad.getAdjAxis(Constants.AXIS_RSX);	
 		leftStick = gamepad.getAdjAxis(Constants.AXIS_Y);
-		drive.arcadeDrive(leftStick,rightStick);
-		//TODO Test this make sure arcadeDrive Javadocs isn't fucked
+		//TODO: WPI LIB ERROR
+		drive.arcadeDrive(-rightStick,-leftStick);
 	}
 	
 	public void doSimpleTankDrive(Gamepad gamepad) {
-		if (gamepad.getRawAxis(Constants.AXIS_RSX)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_RSY)<-Constants.DEADZONE ) {
-			rightTeam.set(gamepad.getRawAxis(Constants.AXIS_RSY));
-			
-		}
-		else {
-			rightTeam.set(0);
-		}
-		if (gamepad.getRawAxis(Constants.AXIS_Y)>Constants.DEADZONE || gamepad.getRawAxis(Constants.AXIS_Y)<-Constants.DEADZONE ) {
-			leftTeam.set(gamepad.getY());
-			
-		}
-		else{
-			leftTeam.set(0);
-		}
-		
-		
+		leftTeam.set(gamepad.getAdjAxis(Constants.AXIS_Y));
+		rightTeam.set(gamepad.getAdjAxis(Constants.AXIS_RSY));
 	}
 	
 	public void doSimpleDrive(Gamepad gamepad) {
@@ -139,6 +138,13 @@ public class Drive {
 		pidLeft.setSetpoint(setpoint);
 		rightTeam.set(rightOut.getOutput()); //TODO: INVERSION!!! Notfication
 		leftTeam.set(-leftOut.getOutput());
+	}
+	
+	public void doPIDDrive(double outSpeed){
+		pidRight.setSetpoint(setpoint);
+		pidLeft.setSetpoint(setpoint);
+		rightTeam.set(rightOut.getOutput() + outSpeed); //TODO: INVERSION!!! Notfication
+		leftTeam.set(-leftOut.getOutput() + outSpeed);
 	}
 	
 	public void doPIDArcadeDrive(Gamepad gamepad) {
@@ -157,17 +163,27 @@ public class Drive {
 		pidRight.setSetpoint(setpoint);
 	}
 	
+	//TODO Make sure this works
 	public void doAutoDrive(double speed, double time) {
-		setpoint = 0;
+		setpoint = gyrometer.getAngle();
 		System.out.println("starting AutoDrive");
-		leftTeam.set(speed+leftOut.getOutput());
-		rightTeam.set(speed+rightOut.getOutput());
+		doPIDDrive(speed);
 		Timer.delay(time);
 		rightTeam.set(0);
 		leftTeam.set(0);
 	}
 	
 	public void doDrive(Gamepad gamepad) {
+		printDriveMessages(gamepad);
+		
+		if (gamepad.getRawButton(Constants.BUTTON_B)) {
+			cycleType();
+		}
+		
+		if (gamepad.getRawButton(Constants.BUTTON_X)){
+			resetPIDArcadeDrive();
+		}
+		
 		switch (driveType) {
 		case ArcadeDrive: 
 			doArcadeDrive(gamepad); 

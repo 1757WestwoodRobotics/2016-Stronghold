@@ -26,16 +26,14 @@ public class Winch {
 	PIDWinch pidWinch;
 	WinchBase winch;
 	
-	static {
+	public Winch(double winchSpeed, boolean isWinching, winchTypes winchType) {
+		this.winchSpeed = winchSpeed;
+		this.isWinching = isWinching;
+		
 		talon6 = new CANTalon(6);
 		talon7 = new CANTalon(7);
 		talon6.setInverted(true);
 		talon6.enableBrakeMode(false);
-	}
-	
-	public Winch(double winchSpeed, boolean isWinching, winchTypes winchType) {
-		this.winchSpeed = winchSpeed;
-		this.isWinching = isWinching;
 		
 		//servo = new Servo(1);
 		
@@ -63,7 +61,6 @@ public class Winch {
 	}
 	
 	public void doWinch(Joystick gamepad) {
-		
 		if (gamepad.getRawButton(Constants.BUTTON_BACK)) {
 			winch.changeOutput(-.01);
 			System.out.println("Decrementing winchSpeed...");
@@ -76,7 +73,7 @@ public class Winch {
 			Math.min(1, winchSpeed);
 		}
 
-		if (gamepad.getRawButton(Constants.BUTTON_X)) {
+		if (gamepad.getRawButton(Constants.BUTTON_A)) {
 			winch.enable();
 			winch.run();
 		} else {

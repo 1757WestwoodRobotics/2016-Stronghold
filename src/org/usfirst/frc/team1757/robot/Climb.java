@@ -19,17 +19,15 @@ public class Climb {
 	boolean isClimbing;
 
 	static CANTalon talon5;
-	
-	static {
-		talon5 = new CANTalon(5);
-		talon5.enableBrakeMode(true);
-		talon5.setInverted(true);
-	}
 
 	public Climb(double climbSpeed, boolean isClimbing) {
 		this.climbSpeed = climbSpeed;
 		this.isClimbing = isClimbing;
-	}
+		
+		talon5 = new CANTalon(5);
+		talon5.enableBrakeMode(true);
+		talon5.setInverted(true);
+		}
 
 	public void doClimb(Joystick gamepad) {
 		/**
@@ -47,8 +45,16 @@ public class Climb {
 			climbSpeed = Math.min(1, climbSpeed);
 		} else if (gamepad.getPOV(0) == 90) {
 			climbSpeed = .5;
+			System.out.println("climbSpeed is .5...");
+			Timer.delay(.1); 
+			climbSpeed = Math.min(1, climbSpeed);
+
 		} else if (gamepad.getPOV(0) == 270) {
 			climbSpeed = -.25;
+			System.out.println("climbSpeed is -.25...");
+			Timer.delay(.1); 
+			climbSpeed = Math.min(1, climbSpeed);
+
 		}
 		
 		if (gamepad.getRawButton(Constants.BUTTON_Y)) {
