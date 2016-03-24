@@ -162,7 +162,7 @@ public class Constants {
 	public static final class Autonomous {
 		private Autonomous(){}
 		public static final double
-		LOWBARSPEED = .2, LOWBARTIME = 4,
+		LOWBARSPEED = .4, LOWBARTIME = 4,
 		ROCKWALLSPEED = 1, ROCKWALLTIME = 3;
 	}
 	
@@ -182,7 +182,7 @@ public class Constants {
 		private PID_(){}
 	    
 		public static final double
-		Kp = 0.08, Ki = 0.00, Kd = 0.01, Kf = 0, turnConstant = 0.2;
+		Kp = 0.08, Ki = 0.00, Kd = 0.01, Kf = 0, turnConstant = 0.4;
 	    //TODO: Need to adjust D for optimization
 	}
 	

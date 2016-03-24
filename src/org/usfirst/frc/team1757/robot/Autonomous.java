@@ -7,8 +7,11 @@ public class Autonomous {
 		//TODO: InComplete
 	}
 	public static void crossLowBar(Drive autoDrive) {
+			if(!isRunning){
 			autoDrive.doAutoDrive(Constants.Autonomous.LOWBARSPEED, Constants.Autonomous.LOWBARTIME);
 			System.out.println("crossing Low Bar");	
+			isRunning = true;
+			}
 	}
 	public static void crossRockWall(Drive autoDrive) {
 			autoDrive.doAutoDrive(Constants.Autonomous.ROCKWALLSPEED, Constants.Autonomous.ROCKWALLTIME);

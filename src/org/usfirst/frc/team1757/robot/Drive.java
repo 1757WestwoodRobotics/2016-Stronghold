@@ -26,7 +26,7 @@ public class Drive {
     double setpoint, initialTurn;
     
     driveTypes driveType;
-    ADXRS450_Gyro gyrometer;
+  public  ADXRS450_Gyro gyrometer;
 	
 	public Drive(double driveSpeed, boolean isDriving, driveTypes driveType) {
 		this.driveSpeed = driveSpeed;
@@ -141,10 +141,19 @@ public class Drive {
 	}
 	
 	public void doPIDDrive(double outSpeed){
+		//TODO: FIX THIS AND MAKE IT SAFEEE!!!
+		pidRight.enable();
+		pidLeft.enable();
 		pidRight.setSetpoint(setpoint);
 		pidLeft.setSetpoint(setpoint);
 		rightTeam.set(rightOut.getOutput() + outSpeed); //TODO: INVERSION!!! Notfication
 		leftTeam.set(-leftOut.getOutput() + outSpeed);
+		SmartDashboard.putData("pidLeft", pidLeft);
+		SmartDashboard.putData("pidRight", pidRight);
+		SmartDashboard.putData("Gyro", gyrometer);
+		SmartDashboard.putNumber("Angle", gyrometer.getAngle());
+		SmartDashboard.putNumber("right Team", rightTeam.get());
+		SmartDashboard.putNumber("left Team", leftTeam.get());
 	}
 	
 	public void doPIDArcadeDrive(Gamepad gamepad) {
@@ -165,12 +174,16 @@ public class Drive {
 	
 	//TODO Make sure this works
 	public void doAutoDrive(double speed, double time) {
-		setpoint = gyrometer.getAngle();
+		double startTime =  Timer.getFPGATimestamp();
 		System.out.println("starting AutoDrive");
-		doPIDDrive(speed);
-		Timer.delay(time);
+		while(Timer.getFPGATimestamp() < startTime + time ) {
+			setpoint = 0;
+			doPIDDrive(speed);
+		}
 		rightTeam.set(0);
 		leftTeam.set(0);
+		
+		
 	}
 	
 	public void doDrive(Gamepad gamepad) {

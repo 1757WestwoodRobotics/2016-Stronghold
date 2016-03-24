@@ -68,6 +68,8 @@ public class Robot extends IterativeRobot {
 		autoSelected = (String) chooser.getSelected();
 //		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
+		
+		drive.gyrometer.reset();
 
 	}
 
@@ -77,10 +79,11 @@ public class Robot extends IterativeRobot {
 
 		switch(autoSelected) {
     	case lowbarAuto:
-    		Autonomous.crossLowBar(drive);  
+    		drive.doAutoDrive(Constants.Autonomous.LOWBARSPEED, Constants.Autonomous.LOWBARTIME);  
             break;
     	case defaultAuto:
     		Autonomous.crossLowBar(drive);
+    		break;
     	default:
     		System.out.println("No Auto Selected");
             break;
