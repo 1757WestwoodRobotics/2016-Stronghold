@@ -1,58 +1,102 @@
 package org.usfirst.frc.team1757.robot;
 
-public class Autonomous {
-	private static boolean isRunning = false;
+import edu.wpi.first.wpilibj.Timer;
 
-	public static void printAutoMessages() {
-		//TODO: InComplete
-	}
-	public static void crossLowBar(Drive autoDrive) {
-			if(!isRunning){
-			autoDrive.doAutoDrive(Constants.Autonomous.LOWBARSPEED, Constants.Autonomous.LOWBARTIME);
-			System.out.println("crossing Low Bar");	
+public class Autonomous {
+	public static boolean isRunning = false;
+
+	public static void doNothing(){
+		if(!isRunning){
+			System.out.println("Default Auto: Do nothing");
 			isRunning = true;
-			}
+		}
+
+	}
+	
+	public static void crossLowBar(Drive autoDrive, Breach breach) {
+		if(!isRunning){
+			System.out.println("crossing Low Bar");	
+			//autoDrive.doAutoDrive(Constants.Autonomous.LOWBARSPEED_1, Constants.Autonomous.LOWBARTIME_1);
+			//breach.doBreachToPoint(Constants.BreachArm.AUTONOMOUS_LOW);
+			autoDrive.doAutoDrive(Constants.Autonomous.LOWBARSPEED_2, Constants.Autonomous.LOWBARTIME_2);
+			isRunning = true;
+		}
 	}
 	public static void crossRockWall(Drive autoDrive) {
-			autoDrive.doAutoDrive(Constants.Autonomous.ROCKWALLSPEED, Constants.Autonomous.ROCKWALLTIME);
+		if(!isRunning){
+			autoDrive.doAutoDrive(Constants.Autonomous.DRIVEACROSSSPEED, Constants.Autonomous.DRIVEACROSSTIME);
 			System.out.println("crossing Rock Wall");
+			isRunning = true;
+		}
 	}
 	public static void crossPortcullis(Drive autoDrive) {
 		//TODO: Add motor instructions
-		System.out.println("crossing Portcullis");
+		//Move breach down to height
+		//Drive forward
+		//Lift up to max
+		if(!isRunning){
+			isRunning = true;
+			System.out.println("crossing Portcullis");
+		}
+		
 	}
 	public static void crossCDF(Drive autoDrive) {
-		//TODO: Add motor instructions
-		System.out.println("crossing CDF");
+		//TODO: Add motor instructions -- Not even trying
+		if(!isRunning){
+			isRunning = true;
+			System.out.println("crossing CDF");
+		}
+		
+		
 	}
 	public static void crossRoughTerrain(Drive autoDrive) {
-		//TODO: Add motor instructions
-		System.out.println("crossing Rought Terrain");
-		isRunning = true;
+		if(!isRunning){
+			autoDrive.doAutoDrive(Constants.Autonomous.DRIVEACROSSSPEED, Constants.Autonomous.DRIVEACROSSTIME);
+			System.out.println("crossing Rough Terrain");
+			isRunning = true;
+		}
 	}
 	public static void crossMoat(Drive autoDrive) {
-		//TODO: Add motor instructions
-		System.out.println("crossing Moat");
-		isRunning = true;
+		if(!isRunning){
+			autoDrive.doAutoDrive(Constants.Autonomous.DRIVEACROSSSPEED, Constants.Autonomous.DRIVEACROSSTIME);
+			System.out.println("crossing Moat");
+			isRunning = true;
+		}
 	}
 	public static void crossRamparts(Drive autoDrive) {
-		//TODO: Add motor instructions
-		System.out.println("crossing Ramparts");
+		if(!isRunning){
+			autoDrive.doAutoDrive(Constants.Autonomous.DRIVEACROSSSPEED, Constants.Autonomous.DRIVEACROSSTIME);
+			System.out.println("crossing Ramparts");
+			isRunning = true;
+		}
 	}
 	public static void crossDrawbridge(Drive autoDrive) {
-		//TODO: Add motor instructions
-		System.out.println("crossing Drawbridge");
-		isRunning = true;
+		//Drive up all the way to it
+		//Lower arm faster than driving back until arm is all the way down
+		//Drive forward
+		if(!isRunning){
+			isRunning = true;
+			System.out.println("crossing Drawbridge");
+		}
 	}
 	public static void crossSallyPort(Drive autoDrive) {
-		//TODO: Add motor instructions
-		System.out.println("crossing SallyPort");
+		//Drive up all the way
+		//Move arm down
+		//Flick open 
+		//knock into door
+		//straighten out
+		//Drive forward
+		if(!isRunning){
+			isRunning = true;
+			System.out.println("crossing SallyPort");
+		}
+		
 	}
-	
-	public static void executeAutonomous(Defenses defense, Drive autoDrive) {
+	//TODO: Clean up
+	public static void executeAutonomous(Defenses defense, Drive autoDrive, Breach breach) {
 		switch (defense) {
 		case LOW_BAR: 
-			crossLowBar(autoDrive); 
+			crossLowBar(autoDrive, breach); 
 			break;
 		case ROCK_WALL: 
 			crossRockWall(autoDrive); 

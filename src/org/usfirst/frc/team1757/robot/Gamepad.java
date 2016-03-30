@@ -10,10 +10,14 @@ public class Gamepad extends Joystick {
 	
 	protected Gamepad(final int port) {
 		super(port);
+		this.deadZone = Constants.DEADZONE;
+		this.triggerZone = Constants.TRIGGERZONE;
+		this.sensitivity = Constants.SENSITIVITY;
 	}
 	
 	protected Gamepad(int port, int numAxisTypes, int numButtonTypes) {
 		super(port, numAxisTypes, numButtonTypes);
+		this.triggerZone = Constants.TRIGGERZONE;
 		this.sensitivity = Constants.SENSITIVITY;
 	}
 	

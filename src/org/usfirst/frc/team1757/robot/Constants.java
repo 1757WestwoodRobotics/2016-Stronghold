@@ -156,14 +156,15 @@ public class Constants {
 	
 	public static final class Config {
 		private Config(){}
-		
+		public static final int 
+		CAMERAQUALITY = 50;
 	}
 	
 	public static final class Autonomous {
 		private Autonomous(){}
 		public static final double
-		LOWBARSPEED = .4, LOWBARTIME = 4,
-		ROCKWALLSPEED = 1, ROCKWALLTIME = 3;
+		LOWBARSPEED_1 = .2, LOWBARSPEED_2 = .4, LOWBARTIME_1 = .8, LOWBARTIME_2 = 2,
+		DRIVEACROSSSPEED = -1, DRIVEACROSSTIME = 1;
 	}
 	
 	public static final class CAN_ {
@@ -203,10 +204,11 @@ public class Constants {
 	public static final class BreachArm {
 		private BreachArm(){};
 		public static final double 
-		STRINGPOT_MAX = .56d, STRINGPOT_MIN = .1d, ANGLE_ADJUST = 1,
+		STRINGPOT_MAX = .4d, STRINGPOT_MIN = .63d, ANGLE_ADJUST = 1,
 		FULLRANGE = 0, OFFSET = 0, //TODO Calibrate POT
-		ARM_SPEED = .5d, 
-		ARM_LENGTH = 47.5; //Unit is feet (47ft, 6in)
+		ARM_SPEED = .2d, 
+		ARM_LENGTH = 47.5, //Unit is feet (47ft, 6in)
+		AUTONOMOUS_LOW = .63;
 		
 		public static final double
 		Kp = .04, Ki = 0.0, Kd = 0.0;

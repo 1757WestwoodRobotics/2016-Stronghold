@@ -18,7 +18,7 @@ public class DrawBridgeCommand implements Runnable{
 	 public void run() {
 	      System.out.println("Running " +  threadName );
 	      try {
-	    	 drive.doAutoDrive(Constants.Autonomous.LOWBARSPEED, Constants.Autonomous.LOWBARTIME);
+	    	 drive.doAutoDrive(Constants.Autonomous.LOWBARSPEED_2, Constants.Autonomous.LOWBARTIME_1);
 	    	//TODO: breach.moveToAngle(120);
 	    	 Thread.sleep(50);
 	     } catch (InterruptedException e) {

@@ -174,12 +174,11 @@ public class Drive {
 	
 	//TODO Make sure this works
 	public void doAutoDrive(double speed, double time) {
-		double startTime =  Timer.getFPGATimestamp();
 		System.out.println("starting AutoDrive");
-		while(Timer.getFPGATimestamp() < startTime + time ) {
-			setpoint = 0;
-			doPIDDrive(speed);
-		}
+		setpoint = 0;
+		doPIDDrive(speed);
+		Timer.delay(time);
+		doPIDDrive(0);
 		rightTeam.set(0);
 		leftTeam.set(0);
 		
