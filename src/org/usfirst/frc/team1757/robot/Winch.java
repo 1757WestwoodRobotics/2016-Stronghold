@@ -37,6 +37,7 @@ public class Winch {
 		 * Up is 0, right is 90, down is 180, left is 270, and if its unpressed, its -1. 
 		 * You do get the 45 degree intervals between those I listed as well.
 		 */
+//TODO: DEREK LOOK HERE!! Use up on d-pad to make the robot winch up. Use down on d-pad to make the robot winch down. 
 		if(gamepad.getPOV(0) == 0){
 			winchTeam.set(winchSpeed);
 		}

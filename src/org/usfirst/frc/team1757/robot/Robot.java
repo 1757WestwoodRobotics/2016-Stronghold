@@ -12,14 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 
-/**
- * TODO: FIX BUTTONS ACCORDING TO DRIVER'S PREFERENCE!!!
- * TODO: WORK ON AUTONOMOUS MODE
- * TODO: WORK ON STRAIGHT DRIVING 
- * TODO: TEST PID (OR MASTER-SLAVE MODE)
- * TODO: CHECK VALUES OF SERVO, STRINGPOT, AND ARMS
- * !!!!: Ensure robot application calls Set() on each Talon at least once per loop
- */
 
 public class Robot extends IterativeRobot {
 	Gamepad gamepad;
@@ -46,7 +38,7 @@ public class Robot extends IterativeRobot {
 
 	public void robotInit() {
 		gamepad = new Gamepad(1);
-
+//TODO: DEREK LOOK HERE!! change the double in the winch constructor to change speed
 		winch = new Winch(0.9);
 		breach = new Breach(Constants.BreachArm.ARM_SPEED, false);
 		climb = new Climb(0.2);
@@ -66,7 +58,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto choices", chooser);
 
 		commands = new Commands(drive, breach);
-
+//TODO: DEREK LOOK HERE!!! Make sure the the camera name matches NI Web-Interface
 		frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
 		session = NIVision.IMAQdxOpenCamera("cam2", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
 		
@@ -113,7 +105,6 @@ public class Robot extends IterativeRobot {
 
 	public void teleopPeriodic() {
 	NIVision.IMAQdxStartAcquisition(session);
-		//Move to teleop init??
 		while(isEnabled() && isOperatorControl()) {
 			try{
 				NIVision.IMAQdxGrab(session, frame, 1);
