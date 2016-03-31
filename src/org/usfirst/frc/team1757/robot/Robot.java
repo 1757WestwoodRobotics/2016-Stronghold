@@ -47,10 +47,10 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		gamepad = new Gamepad(1);
 
-		//winch = new Winch(0.0, false, Winch.winchTypes.DirectWinch);
+		winch = new Winch(0.9);
 		breach = new Breach(Constants.BreachArm.ARM_SPEED, false);
-		//climb = new Climb(0.0, false);
-		drive = new Drive(0.0, false, Drive.driveTypes.ArcadeDrive);
+		climb = new Climb(0.2);
+		drive = new Drive(0.0, Drive.driveTypes.ArcadeDrive);
 		//buttonBox = new Gamepad(0);
 
 		Constants.setConstants(Constants.GamepadTypes.Xbox360);
@@ -69,7 +69,9 @@ public class Robot extends IterativeRobot {
 
 		frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
 		session = NIVision.IMAQdxOpenCamera("cam2", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-		NIVision.IMAQdxConfigureGrab(session);
+		
+	
+			NIVision.IMAQdxConfigureGrab(session);
 	}
 
 	public void autonomousInit() {
@@ -113,7 +115,13 @@ public class Robot extends IterativeRobot {
 	NIVision.IMAQdxStartAcquisition(session);
 		//Move to teleop init??
 		while(isEnabled() && isOperatorControl()) {
-			NIVision.IMAQdxGrab(session, frame, 1);
+			try{
+				NIVision.IMAQdxGrab(session, frame, 1);
+	        	}
+	        	catch(Exception e){
+	        		System.out.println(e);
+	        	}
+		
 			CameraServer.getInstance().setImage(frame);
 
 			/**
@@ -129,12 +137,12 @@ public class Robot extends IterativeRobot {
 			/**
 			 * Uses the DPAD and Y button
 			 */
-			//climb.doClimb(gamepad);
+			climb.doClimb(gamepad);
 
 			/**
 			 * Uses Start, Back, and A
 			 */
-			//winch.doWinch(gamepad);
+			winch.doWinch(gamepad);
 
 			/**
 			 * Uses button 4 for drawbridge, 

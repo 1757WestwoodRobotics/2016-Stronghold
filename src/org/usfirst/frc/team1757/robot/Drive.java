@@ -14,7 +14,6 @@ import org.usfirst.frc.team1757.robot.Constants;
 public class Drive {
 
 	double driveSpeed;
-	boolean isDriving;
 	
 	RobotDrive drive;
 
@@ -28,9 +27,8 @@ public class Drive {
     driveTypes driveType;
   public  ADXRS450_Gyro gyrometer;
 	
-	public Drive(double driveSpeed, boolean isDriving, driveTypes driveType) {
+	public Drive(double driveSpeed, driveTypes driveType) {
 		this.driveSpeed = driveSpeed;
-		this.isDriving = isDriving;
 		
 		setpoint = 0.0;
 		initialTurn = 10;
@@ -88,7 +86,6 @@ public class Drive {
 	public void printDriveMessages(Gamepad gamepad) {
 		SmartDashboard.putNumber("Left Axis", gamepad.getRawAxis(Constants.AXIS_Y));
 		SmartDashboard.putNumber("Right Axis", gamepad.getRawAxis(Constants.AXIS_RSY));
-		SmartDashboard.putBoolean("isDriving?", isDriving);
 		SmartDashboard.putNumber("left Team", leftTeam.get());
 		SmartDashboard.putNumber("right Team", rightTeam.get());
 		SmartDashboard.putData("pidLeft", pidLeft);
@@ -96,11 +93,6 @@ public class Drive {
 		SmartDashboard.putData("Gyro", gyrometer);
 		SmartDashboard.putNumber("Angle", gyrometer.getAngle());
 		SmartDashboard.putString("DriveType", driveType.toString());
-		
-		/*SmartDashboard.putNumber("talon0-motorCurrent", talon0.getOutputCurrent());
-		SmartDashboard.putNumber("talon1-motorCurrent", talon1.getOutputCurrent());
-		SmartDashboard.putNumber("talon2-motorCurrent", talon2.getOutputCurrent());
-		SmartDashboard.putNumber("talon3-motorCurrent", talon3.getOutputCurrent());*/
 	
 	}
 

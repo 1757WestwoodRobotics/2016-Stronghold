@@ -5,7 +5,6 @@ package org.usfirst.frc.team1757.robot;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1757.robot.Constants;
 
@@ -20,9 +19,8 @@ public class Climb {
 
 	static CANTalon talon5;
 
-	public Climb(double climbSpeed, boolean isClimbing) {
+	public Climb(double climbSpeed) {
 		this.climbSpeed = climbSpeed;
-		this.isClimbing = isClimbing;
 		
 		talon5 = new CANTalon(5);
 		talon5.enableBrakeMode(true);
@@ -32,7 +30,10 @@ public class Climb {
 	public void doClimb(Joystick gamepad) {
 		/**
 		 * TODO: FIX BUTTONS ACCORDING TO DRIVER PREFERENCE
-		 */
+		 * TODO: CHANGE SPEED TO A CONSTANT VALUE AND USE CONSTANTS FOR OTHERS AS WELL
+		 * START WITH BREACHING ARM VALUE
+		 
+		 This is speed adjustment
 		if (gamepad.getPOV(0) == 180) {
 			climbSpeed -= 0.01;
 			System.out.println("Decrementing climbSpeed...");
@@ -56,6 +57,7 @@ public class Climb {
 			climbSpeed = Math.min(1, climbSpeed);
 
 		}
+		**/
 		
 		if (gamepad.getRawButton(Constants.BUTTON_Y)) {
 			talon5.set(climbSpeed);

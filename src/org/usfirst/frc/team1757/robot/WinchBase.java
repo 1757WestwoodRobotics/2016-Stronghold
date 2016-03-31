@@ -4,12 +4,6 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.CANSpeedController;
 
-/**
- * 
- * @author loading
- *
- */
-
 public abstract class WinchBase {
 	private CANTeamDrive m_motorOut;
 	private double m_output;
