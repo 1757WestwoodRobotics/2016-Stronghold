@@ -38,8 +38,7 @@ public class Robot extends IterativeRobot {
 
 	public void robotInit() {
 		gamepad = new Gamepad(1);
-//TODO: DEREK LOOK HERE!! change the double in the winch constructor to change speed
-		winch = new Winch(0.9);
+		winch = new Winch(0.5);
 		breach = new Breach(Constants.BreachArm.ARM_SPEED, false);
 		climb = new Climb(0.2);
 		drive = new Drive(0.0, Drive.driveTypes.ArcadeDrive);
@@ -58,7 +57,6 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto choices", chooser);
 
 		commands = new Commands(drive, breach);
-//TODO: DEREK LOOK HERE!!! Make sure the the camera name matches NI Web-Interface
 		frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
 		session = NIVision.IMAQdxOpenCamera("cam2", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
 		

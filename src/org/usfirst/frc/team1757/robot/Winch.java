@@ -4,6 +4,7 @@
 package org.usfirst.frc.team1757.robot;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,7 +15,7 @@ public class Winch {
 	boolean isWinching;
 	
 	static CANTalon talon6, talon7;
-	
+	//DigitalInput upperLimit;
 	CANTeamDrive winchTeam;
 	
 	
@@ -27,6 +28,7 @@ public class Winch {
 		talon6.enableBrakeMode(false);
 		
 		winchTeam = new CANTeamDrive(talon6, talon7);
+		//upperLimit = new DigitalInput(9);
 	}
 
 	
@@ -37,16 +39,32 @@ public class Winch {
 		 * Up is 0, right is 90, down is 180, left is 270, and if its unpressed, its -1. 
 		 * You do get the 45 degree intervals between those I listed as well.
 		 */
-//TODO: DEREK LOOK HERE!! Use up on d-pad to make the robot winch up. Use down on d-pad to make the robot winch down. 
-		if(gamepad.getPOV(0) == 0){
+		
+		if (gamepad.getPOV(0) == 0 || gamepad.getPOV(0) == 45 || gamepad.getPOV(0) == 315){
+			//if (!upperLimit.get()) {
+				winchTeam.set(-winchSpeed);
+			/*}
+			else {
+				System.out.println("Upper Limit Reached");
+			}*/
+		}
+		else if (gamepad.getPOV(0) == 180 || gamepad.getPOV(0) == 225 || gamepad.getPOV(0) == 135){
 			winchTeam.set(winchSpeed);
 		}
-		else if(gamepad.getPOV(0) == 180){
-			winchTeam.set(-winchSpeed);
+		
+		//Increases speed... .35 is good for moving arm, .8 good for lifting
+		else if (gamepad.getPOV(0) == 90) {
+			winchSpeed += .01;
+			System.out.println("Speed set to: " + winchSpeed);
 		}
-		else{
+		else if (gamepad.getPOV(0) == 270) {
+			winchSpeed -= .01;
+			System.out.println("Speed set to: " + winchSpeed);
+		}
+		else {
 			winchTeam.set(0);
 		}
+		
 		
 		
 		SmartDashboard.putBoolean("Winch-GoingUp?", isWinching);
