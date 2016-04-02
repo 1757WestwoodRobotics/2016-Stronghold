@@ -32,7 +32,7 @@ public class Winch {
 	}
 
 	
-	public void doWinch(Joystick gamepad) {
+	public void doWinch(Gamepad gamepad) {
 		/**
 		 * On the x-box controller, the dpad is a "POV". 
 		 * It functions exactly how the doc says using the method call which does not require an argument. 
@@ -54,15 +54,23 @@ public class Winch {
 		
 		//Increases speed... .35 is good for moving arm, .8 good for lifting
 		else if (gamepad.getPOV(0) == 90) {
-			winchSpeed += .01;
+			winchSpeed = .8;
 			System.out.println("Speed set to: " + winchSpeed);
 		}
 		else if (gamepad.getPOV(0) == 270) {
-			winchSpeed -= .01;
+			winchSpeed = .35;
 			System.out.println("Speed set to: " + winchSpeed);
 		}
 		else {
 			winchTeam.set(0);
+		}
+		
+		if (gamepad.getTrigger(Constants.BUTTON_LT)) {
+			winchSpeed -= .02;
+			System.out.println("Speed set to: " + winchSpeed);
+		} else if (gamepad.getTrigger(Constants.BUTTON_RT)) {
+			winchSpeed += .02;
+			System.out.println("Speed set to: " + winchSpeed);
 		}
 		
 		

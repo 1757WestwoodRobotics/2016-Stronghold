@@ -121,7 +121,7 @@ public class Robot extends IterativeRobot {
 			/**
 			 * Uses the triggers LB and RB (for Cycle mode and reset PID respectively)
 			 */
-			breach.doBreach(gamepad);
+			//breach.doBreach(gamepad);
 
 			/**
 			 * Uses the DPAD and Y button
