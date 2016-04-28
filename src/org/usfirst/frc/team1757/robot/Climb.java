@@ -4,7 +4,6 @@
 package org.usfirst.frc.team1757.robot;
 
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1757.robot.Constants;
 
@@ -24,46 +23,24 @@ public class Climb {
 		
 		talon5 = new CANTalon(5);
 		talon5.enableBrakeMode(true);
-		talon5.setInverted(true);
 		}
 
-	public void doClimb(Joystick gamepad) {
-		/**
-		 * TODO: FIX BUTTONS ACCORDING TO DRIVER PREFERENCE
-		 * TODO: CHANGE SPEED TO A CONSTANT VALUE AND USE CONSTANTS FOR OTHERS AS WELL
-		 * START WITH BREACHING ARM VALUE
-		 
-		 This is speed adjustment
-		if (gamepad.getPOV(0) == 180) {
-			climbSpeed -= 0.01;
-			System.out.println("Decrementing climbSpeed...");
-			Timer.delay(.1);
-			climbSpeed = Math.max(-1, climbSpeed);
-		}	else if (gamepad.getPOV(0) == 0) { 
-			climbSpeed += 0.01;
-			System.out.println("Incrementing climbSpeed...");
-			Timer.delay(.1); 
-			climbSpeed = Math.min(1, climbSpeed);
-		} else if (gamepad.getPOV(0) == 90) {
-			climbSpeed = .5;
-			System.out.println("climbSpeed is .5...");
-			Timer.delay(.1); 
-			climbSpeed = Math.min(1, climbSpeed);
-
-		} else if (gamepad.getPOV(0) == 270) {
-			climbSpeed = -.25;
-			System.out.println("climbSpeed is -.25...");
-			Timer.delay(.1); 
-			climbSpeed = Math.min(1, climbSpeed);
-
+	public void doClimb(Gamepad gamepad) {
+	
+		if (gamepad.getTrigger(Constants.BUTTON_LT)) {
+			climbSpeed = .2;
+			System.out.println("Speed set to: " + climbSpeed);
 		}
-		**/
-		
+		else if (gamepad.getTrigger(Constants.BUTTON_RT)) {
+			climbSpeed = .6;
+			System.out.println("Speed set to: " + climbSpeed);
+		}
 		if (gamepad.getRawButton(Constants.BUTTON_Y)) {
-			talon5.set(climbSpeed);
-			isClimbing = true;
-			//HOLD to MOVE
-		} else {
+			talon5.set(climbSpeed);	
+		}
+		else if (gamepad.getRawButton(Constants.BUTTON_A))
+			talon5.set(-climbSpeed);
+		else {
 			talon5.set(0);
 			isClimbing = false;
 		}	

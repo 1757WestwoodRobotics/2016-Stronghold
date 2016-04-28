@@ -13,11 +13,11 @@ public class Autonomous {
 
 	}
 	
-	public static void crossLowBar(Drive autoDrive, Breach breach) {
+	public static void crossLowBar(Drive autoDrive, Winch winch) {
 		if(!isRunning){
 			System.out.println("crossing Low Bar");	
+			//winch.doAutonomousWinch(Constants.Autonomous.WINCHSPEED);
 			//autoDrive.doAutoDrive(Constants.Autonomous.LOWBARSPEED_1, Constants.Autonomous.LOWBARTIME_1);
-			//breach.doBreachToPoint(Constants.BreachArm.AUTONOMOUS_LOW);
 			autoDrive.doAutoDrive(Constants.Autonomous.LOWBARSPEED_2, Constants.Autonomous.LOWBARTIME_2);
 			isRunning = true;
 		}
@@ -93,10 +93,10 @@ public class Autonomous {
 		
 	}
 	//TODO: Clean up
-	public static void executeAutonomous(Defenses defense, Drive autoDrive, Breach breach) {
+	public static void executeAutonomous(Defenses defense, Drive autoDrive, Winch winch) {
 		switch (defense) {
 		case LOW_BAR: 
-			crossLowBar(autoDrive, breach); 
+			crossLowBar(autoDrive, winch); 
 			break;
 		case ROCK_WALL: 
 			crossRockWall(autoDrive); 

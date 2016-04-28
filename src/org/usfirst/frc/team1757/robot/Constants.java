@@ -164,7 +164,7 @@ public class Constants {
 		private Autonomous(){}
 		public static final double
 		LOWBARSPEED_1 = .2, LOWBARSPEED_2 = .4, LOWBARTIME_1 = .8, LOWBARTIME_2 = 2,
-		DRIVEACROSSSPEED = -1, DRIVEACROSSTIME = 1;
+		DRIVEACROSSSPEED = -1, DRIVEACROSSTIME = 1.1, WINCHSPEED = -.2;
 	}
 	
 	public static final class CAN_ {
@@ -172,7 +172,6 @@ public class Constants {
 		
 		public static final int
 		MOTORFRONTLEFT = 3, MOTORFRONTRIGHT = 4, MOTORBACKLEFT = 1, MOTORBACKRIGHT = 2, PDP = 0;
-		//MOTORARM
 	}
 	
 	public static final class PCM_ {

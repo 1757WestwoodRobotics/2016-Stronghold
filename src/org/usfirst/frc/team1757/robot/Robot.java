@@ -37,14 +37,14 @@ public class Robot extends IterativeRobot {
 
 
 	public void robotInit() {
-		gamepad = new Gamepad(1);
-		winch = new Winch(0.5);
+		gamepad = new Gamepad(3);
+		winch = new Winch(0.15);
 		breach = new Breach(Constants.BreachArm.ARM_SPEED, false);
 		climb = new Climb(0.2);
 		drive = new Drive(0.0, Drive.driveTypes.ArcadeDrive);
 		//buttonBox = new Gamepad(0);
 
-		Constants.setConstants(Constants.GamepadTypes.Xbox360);
+		Constants.setConstants(Constants.GamepadTypes.Logitech_DualAction);
 
 		chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", defaultAuto);
@@ -83,7 +83,7 @@ public class Robot extends IterativeRobot {
 		autoSelected = (String) chooser.getSelected();
 		switch(autoSelected) {
 		case lowbarAuto:
-			Autonomous.crossLowBar(drive, breach);
+			Autonomous.crossLowBar(drive, winch);
 			break;
 		case defaultAuto:
 			Autonomous.doNothing();
@@ -126,10 +126,10 @@ public class Robot extends IterativeRobot {
 			/**
 			 * Uses the DPAD and Y button
 			 */
-			climb.doClimb(gamepad);
+			//climb.doClimb(gamepad);
 
 			/**
-			 * Uses Start, Back, and A
+			 * Uses DPAD and triggers
 			 */
 			winch.doWinch(gamepad);
 
