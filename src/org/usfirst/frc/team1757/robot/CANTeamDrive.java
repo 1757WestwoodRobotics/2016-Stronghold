@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.CANSpeedController;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -19,6 +18,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  *
  */
 
+@SuppressWarnings("unused")
 public class CANTeamDrive implements CANSpeedController, PIDOutput {
     private final Set<CANSpeedController> motorControllers = new HashSet<>();
     private float inversion = 1.0f;

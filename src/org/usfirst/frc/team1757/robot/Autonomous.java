@@ -1,7 +1,5 @@
 package org.usfirst.frc.team1757.robot;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class Autonomous {
 	public static boolean isRunning = false;
 
